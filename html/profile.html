@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园活动 - 个人中心</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="../html/index.html" class="brand">
+        <div class="brand-icon">U</div>
+        校园活动
+    </a>
+    <div class="nav-links">
+        <a href="../html/index.html">首页</a>
+        <a href="../html/publish.html">发布活动</a>
+        <a href="../html/vip.html">会员</a>
+    </div>
+    <div class="user-area">
+        <span class="nav-clock" id="navClock"></span>
+        <span class="user-name" id="userAccount"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
+    </div>
+</header>
+
+<main class="page-container">
+
+    <div class="profile-header">
+        <h1>个人中心</h1>
+        <p id="vipBanner" class="vip-banner"></p>
+    </div>
+
+    <div class="profile-grid">
+
+        <!-- 左：基本资料 -->
+        <div class="card profile-card">
+            <h3>基本资料</h3>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label class="form-label">账号</label>
+                    <input type="text" class="form-input" id="pAccount" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">昵称</label>
+                    <input type="text" class="form-input" id="pNickname" placeholder="昵称">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">学校</label>
+                    <input type="text" class="form-input" id="pSchool" placeholder="学校">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">手机号</label>
+                    <input type="tel" class="form-input" id="pPhone" placeholder="手机号">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="saveProfileBtn">保存资料</button>
+            </form>
+        </div>
+
+        <!-- 右：修改密码 -->
+        <div class="card profile-card">
+            <h3>修改密码</h3>
+            <form id="pwdForm">
+                <div class="form-group">
+                    <label class="form-label">旧密码</label>
+                    <input type="password" class="form-input" id="oldPwd" placeholder="当前密码">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">新密码</label>
+                    <input type="password" class="form-input" id="newPwd" placeholder="8~16位新密码">
+                    <div id="pwdErr" class="form-error" hidden>新密码需为8~16位</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">确认新密码</label>
+                    <input type="password" class="form-input" id="newPwd2" placeholder="再输入一次新密码">
+                    <div id="pwd2Err" class="form-error" hidden>两次输入的新密码不一致</div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="savePwdBtn">修改密码</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- 我的报名 -->
+    <section class="section">
+        <div class="section-header">
+            <h2>我的报名</h2>
+            <span class="list-count" id="signupCount"></span>
+        </div>
+        <div id="signupList" class="act-list"><div class="loading-tip">加载中...</div></div>
+    </section>
+
+    <!-- 我的收藏 -->
+    <section class="section">
+        <div class="section-header">
+            <h2>我的收藏</h2>
+            <span class="list-count" id="favCount"></span>
+        </div>
+        <div id="favList" class="act-list"><div class="loading-tip">加载中...</div></div>
+    </section>
+
+    <!-- 我发布的活动 -->
+    <section class="section">
+        <div class="section-header">
+            <h2>我发布的活动</h2>
+            <span class="list-count" id="publishCount"></span>
+        </div>
+        <div id="publishList" class="act-list"><div class="loading-tip">加载中...</div></div>
+    </section>
+
+</main>
+
+<footer>
+    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+</footer>
+
+<script src="../js/common.js"></script>
+<script src="../js/profile.js"></script>
+
+</html>

@@ -1,0 +1,144 @@
+/* 个人中心页样式 */
+
+.profile-header {
+    margin-bottom: 24px;
+}
+
+.profile-header h1 {
+    font-size: 24px;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+}
+
+.vip-banner {
+    font-size: 14px;
+    color: var(--gray-500);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.profile-card {
+    padding: 24px;
+}
+
+.profile-card h3 {
+    font-size: 17px;
+    color: var(--gray-800);
+    margin-bottom: 16px;
+}
+
+/* 活动列表行 */
+.act-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.act-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+}
+
+.act-row:hover {
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.act-row .row-tag {
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--primary-bg);
+    color: var(--primary-dark);
+}
+
+.act-row .row-name {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.act-row .row-meta {
+    flex-shrink: 0;
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.act-row .row-fee {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--warning);
+}
+
+.act-row .row-fee.free {
+    color: var(--success);
+}
+
+.act-row .row-unfav {
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    color: #ef4444;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    transition: transform 0.2s;
+}
+
+.act-row .row-unfav:hover {
+    transform: scale(1.2);
+}
+
+.list-count {
+    font-size: 13px;
+    color: var(--gray-400);
+}
+
+.empty-tip {
+    padding: 24px 0;
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 14px;
+}
+
+.loading-tip {
+    padding: 24px 0;
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 14px;
+}
+
+/* 响应式：窄屏两列变一列 */
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .act-row {
+        flex-wrap: wrap;
+    }
+
+    .act-row .row-name {
+        white-space: normal;
+        width: 100%;
+        order: -1;
+    }
+}

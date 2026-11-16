@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园活动 - 首页</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="../html/index.html" class="brand">
+        <div class="brand-icon">U</div>
+        校园活动
+    </a>
+    <div class="nav-links">
+        <a href="../html/index.html" class="active">首页</a>
+        <a href="../html/publish.html">发布活动</a>
+        <a href="../html/vip.html">会员</a>
+    </div>
+    <div class="user-area">
+        <span class="user-name" id="userAccount"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
+    </div>
+</header>
+
+<main class="page-container">
+
+    <!-- 搜索栏 -->
+    <div class="search-bar">
+        <input type="text" class="form-input" id="searchInput" placeholder="搜索活动名称、学校、标签...">
+        <button class="btn btn-primary" id="searchBtn">搜索</button>
+    </div>
+
+    <!-- 分类筛选 -->
+    <div class="category-bar">
+        <button class="cat-btn active" data-cat="all">全部</button>
+        <button class="cat-btn" data-cat="lecture">讲座论坛</button>
+        <button class="cat-btn" data-cat="sports">体育竞技</button>
+        <button class="cat-btn" data-cat="art">文艺演出</button>
+        <button class="cat-btn" data-cat="tech">科技创新</button>
+        <button class="cat-btn" data-cat="volunteer">志愿公益</button>
+        <button class="cat-btn" data-cat="social">社交聚会</button>
+    </div>
+
+    <!-- 首推活动 -->
+    <section class="section">
+        <div class="section-header">
+            <h2>首推活动</h2>
+            <span class="promote-badge">首推</span>
+        </div>
+        <div class="promote-grid">
+            <a href="../html/activity.html?id=1" class="activity-card promote-card">
+                <div class="card-banner" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                    <span class="promote-badge">首推</span>
+                    <span class="tag tag-warning">讲座论坛</span>
+                </div>
+                <div class="card-body">
+                    <h3>AI时代的大学生职业规划论坛</h3>
+                    <div class="card-meta">
+                        <span class="meta-item">北京大学</span>
+                        <span class="meta-item">2025-05-20</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price">报名费: ¥29.9</span>
+                        <span class="participants">128人已报名</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="../html/activity.html?id=2" class="activity-card promote-card">
+                <div class="card-banner" style="background: linear-gradient(135deg, #f59e0b, #f97316);">
+                    <span class="promote-badge">首推</span>
+                    <span class="tag tag-success">体育竞技</span>
+                </div>
+                <div class="card-body">
+                    <h3>全国大学生电竞联赛·春季赛</h3>
+                    <div class="card-meta">
+                        <span class="meta-item">浙江大学</span>
+                        <span class="meta-item">2025-05-25</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price">报名费: ¥49.9</span>
+                        <span class="participants">256人已报名</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 全部活动 -->
+    <section class="section">
+        <div class="section-header">
+            <h2>热门活动</h2>
+            <a href="#" class="view-all">查看全部 ></a>
+        </div>
+        <div class="activity-grid" id="activityGrid">
+
+            <a href="../html/activity.html?id=3" class="activity-card" data-cat="tech">
+                <div class="card-banner" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);">
+                    <span class="tag tag-primary">科技创新</span>
+                </div>
+                <div class="card-body">
+                    <h3>黑客马拉松 48H 创新挑战赛</h3>
+                    <div class="card-meta">
+                        <span class="meta-item">清华大学</span>
+                        <span class="meta-item">2025-06-01</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price">报名费: ¥19.9</span>
+                        <span class="participants">89人已报名</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="../html/activity.html?id=4" class="activity-card" data-cat="art">
+                <div class="card-banner" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
+                    <span class="tag tag-danger">文艺演出</span>
+                </div>
+                <div class="card-body">
+                    <h3>校园音乐节·夏日狂欢夜</h3>
+                    <div class="card-meta">
+                        <span class="meta-item">武汉大学</span>
+                        <span class="meta-item">2025-06-10</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price">报名费: ¥39.9</span>
+                        <span class="participants">312人已报名</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="../html/activity.html?id=5" class="activity-card" data-cat="volunteer">
+                <div class="card-banner" style="background: linear-gradient(135deg, #22c55e, #10b981);">
+                    <span class="tag tag-success">志愿公益</span>
+                </div>
+                <div class="card-body">
+                    <h3>乡村支教志愿者招募计划</h3>
+                    <div class="card-meta">
+                        <span class="meta-item">复旦大学</span>
+                        <span class="meta-item">2025-07-01</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price free">免费</span>
+                        <span class="participants">67人已报名</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="../html/activity.html?id=6" class="activity-card" data-cat="social">
+                <div class="card-banner" style="background: linear-gradient(135deg, #a855f7, #6366f1);">
+                    <span class="tag tag-primary">社交聚会</span>
+                </div>
+                <div class="card-body">
+                    <h3>跨校联谊·读书分享会</h3>
+                    <div class="card-meta">
+                        <span class="meta-item">南京大学</span>
+                        <span class="meta-item">2025-05-18</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price">报名费: ¥9.9</span>
+                        <span class="participants">45人已报名</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="../html/activity.html?id=7" class="activity-card" data-cat="lecture">
+                <div class="card-banner" style="background: linear-gradient(135deg, #64748b, #475569);">
+                    <span class="tag tag-warning">讲座论坛</span>
+                </div>
+                <div class="card-body">
+                    <h3>创业大咖面对面·经验分享</h3>
+                    <div class="card-meta">
+                        <span class="meta-item">上海交大</span>
+                        <span class="meta-item">2025-05-30</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price">报名费: ¥15</span>
+                        <span class="participants">203人已报名</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="../html/activity.html?id=8" class="activity-card" data-cat="sports">
+                <div class="card-banner" style="background: linear-gradient(135deg, #f97316, #ef4444);">
+                    <span class="tag tag-success">体育竞技</span>
+                </div>
+                <div class="card-body">
+                    <h3>校园篮球3v3挑战赛</h3>
+                    <div class="card-meta">
+                        <span class="meta-item">中山大学</span>
+                        <span class="meta-item">2025-06-05</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price">报名费: ¥20</span>
+                        <span class="participants">156人已报名</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+</footer>
+
+<script src="../js/index.js"></script>
+
+</html>

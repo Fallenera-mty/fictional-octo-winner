@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "maven-build",
+            "type": "shell",
+            "command": "mvn",
+            "args": ["compile", "-f", "${workspaceFolder}/pom.xml"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "maven-package",
+            "type": "shell",
+            "command": "mvn",
+            "args": ["package", "-f", "${workspaceFolder}/pom.xml"],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "maven-clean",
+            "type": "shell",
+            "command": "mvn",
+            "args": ["clean", "-f", "${workspaceFolder}/pom.xml"],
+            "problemMatcher": []
+        }
+    ]
+}

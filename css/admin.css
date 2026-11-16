@@ -1,0 +1,138 @@
+/* 管理后台样式 */
+
+.admin-title {
+    margin-bottom: 20px;
+}
+
+.admin-title h1 {
+    margin: 0;
+    font-size: 26px;
+    color: var(--gray-900);
+}
+
+.admin-title p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: var(--gray-500);
+}
+
+/* 统计卡片 */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.admin-stat-card {
+    text-align: center;
+    padding: 18px 12px;
+}
+
+.admin-stat-card .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1.2;
+}
+
+.admin-stat-card .stat-label {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 4px;
+}
+
+/* 管理区块 */
+.admin-section {
+    margin-bottom: 20px;
+}
+
+.admin-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.admin-section-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--gray-800);
+}
+
+/* 表格 */
+.table-wrap {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-100);
+    white-space: nowrap;
+}
+
+.admin-table th {
+    font-size: 13px;
+    color: var(--gray-500);
+    font-weight: 600;
+    background: var(--gray-50);
+}
+
+.admin-table tbody tr:hover {
+    background: var(--primary-bg);
+}
+
+.cell-name {
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cell-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.table-loading {
+    text-align: center;
+    color: var(--gray-400);
+    padding: 24px !important;
+}
+
+/* 状态徽章 */
+.status-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-on {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-off {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.status-admin {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .admin-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

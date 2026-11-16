@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园活动 - 推广中心</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/promote.css">
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="../html/index.html" class="brand">
+        <div class="brand-icon">U</div>
+        校园活动
+    </a>
+    <div class="nav-links">
+        <a href="../html/index.html">首页</a>
+        <a href="../html/publish.html">发布活动</a>
+        <a href="../html/vip.html">会员</a>
+    </div>
+    <div class="user-area">
+        <span class="user-name" id="userAccount"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
+    </div>
+</header>
+
+<main class="page-container">
+
+    <div class="promote-header">
+        <h1>推广中心</h1>
+        <p>购买首推位，让你的活动获得更多曝光和报名</p>
+    </div>
+
+    <!-- 推广方案 -->
+    <section class="section">
+        <h2>推广方案</h2>
+        <div class="promote-plans">
+
+            <div class="promote-card">
+                <div class="promote-card-header" style="background: linear-gradient(135deg, #6366f1, #818cf8);">
+                    <h3>基础推广</h3>
+                    <div class="promote-price">¥50<span>/天</span></div>
+                </div>
+                <div class="promote-card-body">
+                    <ul>
+                        <li>首页推荐位展示</li>
+                        <li>对应分类页展示</li>
+                        <li>基础数据报告</li>
+                    </ul>
+                    <div class="promote-estimate">
+                        <span class="estimate-label">预计曝光</span>
+                        <span class="estimate-value">500-1000次/天</span>
+                    </div>
+                </div>
+                <div class="promote-card-footer">
+                    <div class="day-select">
+                        <label>天数：</label>
+                        <select class="form-input" id="basicDays" style="width:80px;">
+                            <option value="1">1天</option>
+                            <option value="3" selected>3天</option>
+                            <option value="7">7天</option>
+                            <option value="14">14天</option>
+                        </select>
+                    </div>
+                    <div class="total-price">合计：<strong id="basicTotal">¥150</strong></div>
+                    <button class="btn btn-primary btn-block" onclick="buyPromote('basic')">购买</button>
+                </div>
+            </div>
+
+            <div class="promote-card featured">
+                <div class="promote-card-header" style="background: linear-gradient(135deg, #f59e0b, #f97316);">
+                    <div class="featured-tag">推荐</div>
+                    <h3>高级推广</h3>
+                    <div class="promote-price">¥120<span>/天</span></div>
+                </div>
+                <div class="promote-card-body">
+                    <ul>
+                        <li>首页首推位展示</li>
+                        <li>分类页置顶展示</li>
+                        <li>搜索结果优先</li>
+                        <li>详细数据报告</li>
+                    </ul>
+                    <div class="promote-estimate">
+                        <span class="estimate-label">预计曝光</span>
+                        <span class="estimate-value">2000-5000次/天</span>
+                    </div>
+                </div>
+                <div class="promote-card-footer">
+                    <div class="day-select">
+                        <label>天数：</label>
+                        <select class="form-input" id="premiumDays" style="width:80px;">
+                            <option value="1">1天</option>
+                            <option value="3" selected>3天</option>
+                            <option value="7">7天</option>
+                            <option value="14">14天</option>
+                        </select>
+                    </div>
+                    <div class="total-price">合计：<strong id="premiumTotal">¥360</strong></div>
+                    <button class="btn btn-primary btn-block" onclick="buyPromote('premium')">购买</button>
+                </div>
+            </div>
+
+            <div class="promote-card">
+                <div class="promote-card-header" style="background: linear-gradient(135deg, #ef4444, #ec4899);">
+                    <h3>旗舰推广</h3>
+                    <div class="promote-price">¥200<span>/天</span></div>
+                </div>
+                <div class="promote-card-body">
+                    <ul>
+                        <li>全站首推位展示</li>
+                        <li>弹窗推荐展示</li>
+                        <li>所有分类置顶</li>
+                        <li>搜索结果首位</li>
+                        <li>高级数据+转化分析</li>
+                    </ul>
+                    <div class="promote-estimate">
+                        <span class="estimate-label">预计曝光</span>
+                        <span class="estimate-value">5000-15000次/天</span>
+                    </div>
+                </div>
+                <div class="promote-card-footer">
+                    <div class="day-select">
+                        <label>天数：</label>
+                        <select class="form-input" id="ultimateDays" style="width:80px;">
+                            <option value="1">1天</option>
+                            <option value="3" selected>3天</option>
+                            <option value="7">7天</option>
+                            <option value="14">14天</option>
+                        </select>
+                    </div>
+                    <div class="total-price">合计：<strong id="ultimateTotal">¥600</strong></div>
+                    <button class="btn btn-primary btn-block" onclick="buyPromote('ultimate')">购买</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 会员优惠提示 -->
+    <div class="vip-tip card" id="vipTip">
+        <div class="vip-tip-icon">💡</div>
+        <div class="vip-tip-content">
+            <h3>会员专享优惠</h3>
+            <p id="vipTipText">开通<strong>活动达人</strong>会员，推广费用可享<strong>8折优惠</strong>！<a href="../html/vip.html">立即开通 ></a></p>
+        </div>
+    </div>
+
+    <!-- 推广说明 -->
+    <section class="section">
+        <h2>推广说明</h2>
+        <div class="card" style="padding: 24px 28px;">
+            <div class="faq-item">
+                <h4>什么是首推位？</h4>
+                <p>首推位是平台首页最显眼的活动展示位置，购买首推位的活动将优先展示给所有访问用户，大幅提升活动曝光和报名转化。</p>
+            </div>
+            <div class="faq-item">
+                <h4>推广效果如何保证？</h4>
+                <p>平台根据活动分类、标签和用户兴趣进行智能匹配，确保推广触达最相关的目标用户群体。同时提供详细数据报告，让你实时了解推广效果。</p>
+            </div>
+            <div class="faq-item">
+                <h4>推广位展示规则</h4>
+                <p>同一时段首推位按购买时间和方案等级排序展示。高级推广和旗舰推广享有更高展示权重。参与者仍可通过搜索和分类浏览找到所有活动，保证公平性。</p>
+            </div>
+            <div class="faq-item">
+                <h4>退款政策</h4>
+                <p>推广购买后24小时内可申请全额退款（未开始展示的情况下）。推广开始展示后不支持退款。</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+</footer>
+
+<script src="../js/common.js"></script>
+<script src="../js/promote.js"></script>
+
+</html>

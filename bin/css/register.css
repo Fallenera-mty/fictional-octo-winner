@@ -1,0 +1,91 @@
+/* 注册页样式 */
+
+body {
+    background: linear-gradient(135deg, #eef2ff 0%, #faf5ff 50%, #fff7ed 100%);
+}
+
+main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+}
+
+.register-card {
+    width: 440px;
+    max-width: 100%;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 40px 36px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--gray-100);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.register-header h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    color: var(--gray-900);
+}
+
+.register-header .subtitle {
+    margin: 0;
+    font-size: 15px;
+    color: var(--gray-500);
+}
+
+.phone-row {
+    display: flex;
+    gap: 10px;
+}
+
+.sms-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.sms-row .form-input {
+    flex: 1;
+}
+
+.sms-row .btn {
+    white-space: nowrap;
+    min-width: 110px;
+}
+
+#smsRow[hidden] {
+    display: none;
+}
+
+.agreement {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-bottom: 20px;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--gray-500);
+}
+
+.login-link a {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .register-card {
+        padding: 28px 20px;
+    }
+}

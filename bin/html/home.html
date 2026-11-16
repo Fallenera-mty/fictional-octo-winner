@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园活动平台</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/home.css">
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="../html/home.html" class="brand">
+        <div class="brand-icon">U</div>
+        校园活动
+    </a>
+    <div class="nav-links">
+        <a href="../html/home.html" class="active">首页</a>
+        <a href="../html/publish.html">发布活动</a>
+        <a href="../html/vip.html">会员</a>
+    </div>
+    <div class="user-area">
+        <span class="user-name" id="userAccount"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
+    </div>
+</header>
+
+<main class="home-layout">
+
+    <!-- 左侧：活动列表 -->
+    <div class="list-panel">
+        <!-- 搜索栏 -->
+        <div class="search-bar">
+            <input type="text" class="form-input" id="searchInput" placeholder="搜索活动名称、学校、标签...">
+            <button class="btn btn-primary" id="searchBtn">搜索</button>
+        </div>
+
+        <!-- 分类筛选 -->
+        <div class="category-bar">
+            <button class="cat-btn active" data-cat="all">全部</button>
+            <button class="cat-btn" data-cat="lecture">讲座论坛</button>
+            <button class="cat-btn" data-cat="sports">体育竞技</button>
+            <button class="cat-btn" data-cat="art">文艺演出</button>
+            <button class="cat-btn" data-cat="tech">科技创新</button>
+            <button class="cat-btn" data-cat="volunteer">志愿公益</button>
+            <button class="cat-btn" data-cat="social">社交聚会</button>
+        </div>
+
+        <!-- 首推活动 -->
+        <section class="section" id="promoteSection">
+            <div class="section-header">
+                <h2>首推活动</h2>
+                <span class="promote-badge">首推</span>
+            </div>
+            <div class="promote-grid" id="promoteGrid"></div>
+        </section>
+
+        <!-- 全部活动 -->
+        <section class="section">
+            <div class="section-header">
+                <h2>热门活动</h2>
+            </div>
+            <div class="activity-grid" id="activityGrid"></div>
+        </section>
+    </div>
+
+    <!-- 右侧：活动详情面板 -->
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-empty" id="detailEmpty">
+            <div class="empty-icon">📋</div>
+            <p>点击左侧活动查看详情</p>
+        </div>
+        <div class="detail-content" id="detailContent" hidden>
+            <!-- 关闭按钮 -->
+            <button class="detail-close" id="detailClose">&times;</button>
+
+            <!-- 活动头图 -->
+            <div class="detail-banner" id="detailBanner">
+                <div class="banner-overlay" id="detailBannerOverlay"></div>
+            </div>
+
+            <!-- 活动信息 -->
+            <div class="detail-body">
+                <h1 id="detailTitle"></h1>
+
+                <div class="detail-meta" id="detailMeta"></div>
+
+                <div class="detail-desc">
+                    <h2>活动介绍</h2>
+                    <p id="detailDesc"></p>
+                </div>
+
+                <div class="detail-tags" id="detailTags"></div>
+            </div>
+
+            <!-- 报名卡片 -->
+            <div class="card signup-card">
+                <div class="signup-price">
+                    <span class="price-label">报名费</span>
+                    <span class="price-amount" id="detailPrice"></span>
+                </div>
+                <div class="signup-info" id="detailSignupInfo"></div>
+                <button class="btn btn-primary btn-block btn-lg" id="signupBtn">立即报名</button>
+                <div class="signup-hint">报名后可参加活动，活动结束后可评分</div>
+            </div>
+
+            <!-- 评分卡片 -->
+            <div class="card rating-card">
+                <h3>活动评分</h3>
+                <div class="current-rating" id="currentRating"></div>
+                <div class="my-rating" id="myRating" hidden>
+                    <p style="font-size:14px; color:var(--gray-500); margin-bottom:10px;">我的评分：</p>
+                    <div class="rating-stars" id="ratingStars">
+                        <span class="rate-star" data-value="1">★</span>
+                        <span class="rate-star" data-value="2">★</span>
+                        <span class="rate-star" data-value="3">★</span>
+                        <span class="rate-star" data-value="4">★</span>
+                        <span class="rate-star" data-value="5">★</span>
+                    </div>
+                    <textarea class="form-input" id="ratingComment" placeholder="写下你的评价（选填）" rows="3" style="margin-top:10px;"></textarea>
+                    <button class="btn btn-primary btn-block btn-sm" id="submitRating" style="margin-top:10px;">提交评分</button>
+                </div>
+                <div class="rating-locked" id="ratingLocked">
+                    <p style="font-size:14px; color:var(--gray-400);">报名后可对活动进行评分</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+</footer>
+
+<script src="../js/home.js"></script>
+
+</html>

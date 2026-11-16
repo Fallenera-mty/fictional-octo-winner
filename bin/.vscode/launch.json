@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "启动校园活动平台",
+            "request": "launch",
+            "mainClass": "com.campus.Application",
+            "projectName": "花海fall七月",
+            "classPaths": [
+                "${workspaceFolder}/target",
+                "${workspaceFolder}/lib/sqlite-jdbc.jar",
+                "${workspaceFolder}/lib/slf4j-api.jar",
+                "${workspaceFolder}/lib/slf4j-simple.jar"
+            ],
+            "encoding": "UTF-8",
+            "vmArgs": "-Dfile.encoding=UTF-8"
+        }
+    ]
+}

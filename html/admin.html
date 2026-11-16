@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园活动 - 管理后台</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="../html/home.html" class="brand">
+        <div class="brand-icon">U</div>
+        校园活动
+    </a>
+    <div class="nav-links">
+        <a href="../html/home.html">首页</a>
+        <a href="../html/publish.html">发布活动</a>
+        <a href="../html/vip.html">会员</a>
+        <a href="../html/stats.html">数据</a>
+        <a href="../html/admin.html" class="active" id="adminNavLink">后台</a>
+    </div>
+    <div class="user-area">
+        <span class="user-name" id="userAccount"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
+    </div>
+</header>
+
+<main class="page-container">
+
+    <div class="admin-title">
+        <h1>管理后台</h1>
+        <p>活动审核上下架、用户封禁管理、平台数据总览</p>
+    </div>
+
+    <!-- 统计卡片 -->
+    <div class="admin-stats">
+        <div class="card admin-stat-card">
+            <div class="stat-num" id="statUsers">-</div>
+            <div class="stat-label">注册用户</div>
+        </div>
+        <div class="card admin-stat-card">
+            <div class="stat-num" id="statActivities">-</div>
+            <div class="stat-label">全部活动</div>
+        </div>
+        <div class="card admin-stat-card">
+            <div class="stat-num" id="statSignups">-</div>
+            <div class="stat-label">活动报名</div>
+        </div>
+        <div class="card admin-stat-card">
+            <div class="stat-num" id="statRatings">-</div>
+            <div class="stat-label">评价条数</div>
+        </div>
+    </div>
+
+    <!-- 活动管理 -->
+    <section class="card admin-section">
+        <div class="admin-section-header">
+            <h2>活动管理</h2>
+            <button class="btn btn-outline btn-sm" id="refreshActivitiesBtn">刷新</button>
+        </div>
+        <div class="table-wrap">
+            <table class="admin-table" id="activityTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>活动名称</th>
+                        <th>类别</th>
+                        <th>发布者</th>
+                        <th>日期</th>
+                        <th>报名</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="8" class="table-loading">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 用户管理 -->
+    <section class="card admin-section">
+        <div class="admin-section-header">
+            <h2>用户管理</h2>
+            <button class="btn btn-outline btn-sm" id="refreshUsersBtn">刷新</button>
+        </div>
+        <div class="table-wrap">
+            <table class="admin-table" id="userTable">
+                <thead>
+                    <tr>
+                        <th>账号</th>
+                        <th>昵称</th>
+                        <th>学校</th>
+                        <th>会员</th>
+                        <th>角色</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="7" class="table-loading">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+</footer>
+
+<script src="../js/common.js"></script>
+<script src="../js/admin.js"></script>
+
+</html>

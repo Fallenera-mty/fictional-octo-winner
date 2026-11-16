@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园活动 - 会员中心</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/vip.css">
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="../html/index.html" class="brand">
+        <div class="brand-icon">U</div>
+        校园活动
+    </a>
+    <div class="nav-links">
+        <a href="../html/index.html">首页</a>
+        <a href="../html/publish.html">发布活动</a>
+        <a href="../html/vip.html" class="active">会员</a>
+    </div>
+    <div class="user-area">
+        <span class="user-name" id="userAccount"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
+    </div>
+</header>
+
+<main class="page-container">
+
+    <!-- 会员状态 -->
+    <div class="vip-status card" id="vipStatus">
+        <div class="status-left">
+            <div class="status-icon">
+                <span class="vip-badge">VIP</span>
+            </div>
+            <div class="status-info">
+                <h2 id="vipTitle">普通用户</h2>
+                <p id="vipDesc">升级会员，解锁更多权益</p>
+            </div>
+        </div>
+        <div class="status-right">
+            <span class="status-expire" id="vipExpire" hidden>到期时间：2025-12-31</span>
+        </div>
+    </div>
+
+    <!-- 会员套餐 -->
+    <section class="section">
+        <h2>会员套餐</h2>
+        <div class="plan-grid">
+
+            <div class="plan-box">
+                <div class="plan-header">
+                    <h3>普通用户</h3>
+                    <div class="plan-price">免费</div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature"><span class="check yes">✓</span> 浏览和搜索活动</div>
+                    <div class="feature"><span class="check yes">✓</span> 报名参加活动</div>
+                    <div class="feature"><span class="check yes">✓</span> 活动结束后评分</div>
+                    <div class="feature"><span class="check no">✗</span> 发布活动</div>
+                    <div class="feature"><span class="check no">✗</span> 购买首推位</div>
+                    <div class="feature"><span class="check no">✗</span> 优先报名</div>
+                </div>
+                <button class="btn btn-ghost btn-block" disabled>当前方案</button>
+            </div>
+
+            <div class="plan-box popular">
+                <div class="plan-popular-tag">最受欢迎</div>
+                <div class="plan-header">
+                    <h3>校园达人</h3>
+                    <div class="plan-price">¥9.9<span class="period">/月</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature"><span class="check yes">✓</span> 浏览和搜索活动</div>
+                    <div class="feature"><span class="check yes">✓</span> 报名参加活动</div>
+                    <div class="feature"><span class="check yes">✓</span> 活动结束后评分</div>
+                    <div class="feature"><span class="check yes">✓</span> 发布活动（每月3场）</div>
+                    <div class="feature"><span class="check yes">✓</span> 购买首推位</div>
+                    <div class="feature"><span class="check yes">✓</span> 优先报名（提前24h）</div>
+                    <div class="feature"><span class="check yes">✓</span> 活动数据统计</div>
+                    <div class="feature"><span class="check no">✗</span> 无限发布活动</div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="buyVip('campus')">立即开通</button>
+            </div>
+
+            <div class="plan-box premium">
+                <div class="plan-header">
+                    <h3>活动达人</h3>
+                    <div class="plan-price">¥29.9<span class="period">/月</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature"><span class="check yes">✓</span> 浏览和搜索活动</div>
+                    <div class="feature"><span class="check yes">✓</span> 报名参加活动</div>
+                    <div class="feature"><span class="check yes">✓</span> 活动结束后评分</div>
+                    <div class="feature"><span class="check yes">✓</span> 无限发布活动</div>
+                    <div class="feature"><span class="check yes">✓</span> 购买首推位（8折）</div>
+                    <div class="feature"><span class="check yes">✓</span> 优先报名（提前48h）</div>
+                    <div class="feature"><span class="check yes">✓</span> 高级数据统计</div>
+                    <div class="feature"><span class="check yes">✓</span> 专属客服支持</div>
+                    <div class="feature"><span class="check yes">✓</span> 报名费佣金减免至5%</div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="buyVip('premium')">立即开通</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 权益对比 -->
+    <section class="section">
+        <h2>权益对比</h2>
+        <div class="card" style="overflow-x:auto;">
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>权益</th>
+                        <th>普通用户</th>
+                        <th>校园达人</th>
+                        <th>活动达人</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>浏览/搜索活动</td>
+                        <td><span class="check yes">✓</span></td>
+                        <td><span class="check yes">✓</span></td>
+                        <td><span class="check yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>报名参加活动</td>
+                        <td><span class="check yes">✓</span></td>
+                        <td><span class="check yes">✓</span></td>
+                        <td><span class="check yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>活动评分</td>
+                        <td><span class="check yes">✓</span></td>
+                        <td><span class="check yes">✓</span></td>
+                        <td><span class="check yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>发布活动</td>
+                        <td><span class="check no">✗</span></td>
+                        <td>每月3场</td>
+                        <td>无限</td>
+                    </tr>
+                    <tr>
+                        <td>购买首推位</td>
+                        <td><span class="check no">✗</span></td>
+                        <td><span class="check yes">✓</span></td>
+                        <td>8折优惠</td>
+                    </tr>
+                    <tr>
+                        <td>优先报名</td>
+                        <td><span class="check no">✗</span></td>
+                        <td>提前24h</td>
+                        <td>提前48h</td>
+                    </tr>
+                    <tr>
+                        <td>报名费佣金</td>
+                        <td>-</td>
+                        <td>10%</td>
+                        <td>5%</td>
+                    </tr>
+                    <tr>
+                        <td>数据统计</td>
+                        <td><span class="check no">✗</span></td>
+                        <td>基础</td>
+                        <td>高级</td>
+                    </tr>
+                    <tr>
+                        <td>客服支持</td>
+                        <td>社区</td>
+                        <td>社区</td>
+                        <td>专属客服</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+</footer>
+
+<script src="../js/common.js"></script>
+<script src="../js/vip.js"></script>
+
+</html>

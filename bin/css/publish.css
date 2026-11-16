@@ -1,0 +1,158 @@
+/* 发布活动页样式 */
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+/* 报名费选项 */
+.fee-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fee-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.fee-option:hover {
+    border-color: var(--primary-light);
+}
+
+.fee-option:has(input:checked) {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+}
+
+.fee-label {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.fee-desc {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-left: auto;
+}
+
+/* 费用预览 */
+.fee-preview {
+    margin-top: 12px;
+    padding: 16px;
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.fee-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+.fee-detail.total {
+    border-top: 1px solid var(--gray-200);
+    margin-top: 6px;
+    padding-top: 10px;
+    font-size: 16px;
+}
+
+/* 推广选项 */
+.promote-option {
+    margin-top: 4px;
+}
+
+.promote-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--gray-700);
+}
+
+.promote-info {
+    margin-top: 16px;
+    padding: 20px;
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.promote-plans {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.plan-card {
+    display: block;
+    cursor: pointer;
+}
+
+.plan-card input {
+    display: none;
+}
+
+.plan-content {
+    padding: 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.plan-card input:checked + .plan-content {
+    border-color: var(--primary);
+    background: var(--primary-bg);
+}
+
+.plan-content h4 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: var(--gray-800);
+}
+
+.plan-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+.plan-content p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--gray-500);
+}
+
+/* 发布按钮区 */
+.publish-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
+    .promote-plans {
+        grid-template-columns: 1fr;
+    }
+    .publish-actions {
+        flex-direction: column;
+    }
+}

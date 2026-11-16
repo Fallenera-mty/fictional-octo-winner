@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "NirvanaFlower 启动",
+            "request": "launch",
+            "mainClass": "com.campus.NirvanaFlower",
+            "projectName": "nirvana-flower",
+            "preLaunchTask": "maven-build",
+            "encoding": "UTF-8",
+            "vmArgs": "-Dfile.encoding=UTF-8"
+        }
+    ]
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园活动 - 活动详情</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/activity.css">
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="../html/index.html" class="brand">
+        <div class="brand-icon">U</div>
+        校园活动
+    </a>
+    <div class="nav-links">
+        <a href="../html/index.html">首页</a>
+        <a href="../html/publish.html">发布活动</a>
+        <a href="../html/vip.html">会员</a>
+    </div>
+    <div class="user-area">
+        <span class="user-name" id="userAccount"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
+    </div>
+</header>
+
+<main class="page-container">
+
+    <div class="activity-detail">
+        <!-- 活动头图 -->
+        <div class="detail-banner" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+            <div class="banner-overlay">
+                <span class="promote-badge">首推</span>
+                <span class="tag tag-warning" style="font-size:14px;">讲座论坛</span>
+            </div>
+        </div>
+
+        <!-- 活动信息 -->
+        <div class="detail-content">
+            <div class="detail-main">
+                <h1>AI时代的大学生职业规划论坛</h1>
+
+                <div class="detail-meta">
+                    <div class="meta-row">
+                        <span class="meta-label">发布者</span>
+                        <span class="meta-value">北京大学就业指导中心</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">时间</span>
+                        <span class="meta-value">2025年5月20日 14:00-17:00</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">地点</span>
+                        <span class="meta-value">北京大学 百周年纪念讲堂</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">学校</span>
+                        <span class="meta-value">北京大学</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">已报名</span>
+                        <span class="meta-value">128 / 300 人</span>
+                    </div>
+                </div>
+
+                <div class="detail-desc">
+                    <h2>活动介绍</h2>
+                    <p>随着AI技术的飞速发展，大学生的职业规划面临前所未有的机遇与挑战。本次论坛邀请到多位行业大咖、资深HR和成功校友，共同探讨AI时代下的职业发展路径。</p>
+                    <p>论坛亮点：</p>
+                    <ul>
+                        <li>AI行业趋势深度解读</li>
+                        <li>热门岗位技能需求分析</li>
+                        <li>跨学科复合型人才发展路径</li>
+                        <li>现场1对1职业咨询</li>
+                        <li>名企实习内推机会</li>
+                    </ul>
+                    <p>无论你是即将毕业的应届生，还是正在规划未来的在校生，这场论坛都将为你打开新的视野。</p>
+                </div>
+
+                <!-- 活动标签 -->
+                <div class="detail-tags">
+                    <span class="tag tag-primary">AI</span>
+                    <span class="tag tag-primary">职业规划</span>
+                    <span class="tag tag-primary">论坛</span>
+                    <span class="tag tag-primary">北京大学</span>
+                </div>
+            </div>
+
+            <!-- 侧边栏：报名 + 评分 -->
+            <div class="detail-sidebar">
+                <!-- 报名卡片 -->
+                <div class="card signup-card">
+                    <div class="signup-price">
+                        <span class="price-label">报名费</span>
+                        <span class="price-amount">¥29.9</span>
+                    </div>
+                    <div class="signup-info">
+                        <span>平台服务费 10%：¥3.0</span>
+                        <span>发布者实得：¥26.9</span>
+                    </div>
+                    <button class="btn btn-primary btn-block btn-lg" id="signupBtn">立即报名</button>
+                    <div class="signup-hint">报名后可参加活动，活动结束后可评分</div>
+                </div>
+
+                <!-- 评分卡片 -->
+                <div class="card rating-card">
+                    <h3>活动评分</h3>
+                    <div class="current-rating">
+                        <div class="stars">
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span class="empty">★</span>
+                        </div>
+                        <span class="rating-num">4.2 / 5.0</span>
+                        <span class="rating-count">(86人评分)</span>
+                    </div>
+
+                    <div class="my-rating" id="myRating" hidden>
+                        <p style="font-size:14px; color:var(--gray-500); margin-bottom:10px;">我的评分：</p>
+                        <div class="rating-stars" id="ratingStars">
+                            <span class="rate-star" data-value="1">★</span>
+                            <span class="rate-star" data-value="2">★</span>
+                            <span class="rate-star" data-value="3">★</span>
+                            <span class="rate-star" data-value="4">★</span>
+                            <span class="rate-star" data-value="5">★</span>
+                        </div>
+                        <textarea class="form-input" id="ratingComment" placeholder="写下你的评价（选填）" rows="3" style="margin-top:10px;"></textarea>
+                        <button class="btn btn-primary btn-block btn-sm" id="submitRating" style="margin-top:10px;">提交评分</button>
+                    </div>
+                    <div class="rating-locked" id="ratingLocked">
+                        <p style="font-size:14px; color:var(--gray-400);">活动结束后可对活动进行评分</p>
+                    </div>
+                </div>
+
+                <!-- 发布者信息 -->
+                <div class="card publisher-card">
+                    <h3>发布者</h3>
+                    <div class="publisher-info">
+                        <div class="publisher-avatar">北</div>
+                        <div>
+                            <div class="publisher-name">北大就业中心</div>
+                            <div class="publisher-stats">
+                                <span class="stars" style="font-size:13px;">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span class="empty">★</span>
+                                </span>
+                                <span style="font-size:13px; color:var(--gray-400);">4.5分 · 12场活动</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+</footer>
+
+<script src="../js/activity.js"></script>
+
+</html>

@@ -1,0 +1,21 @@
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8
+11月 11, 2026 12:14:21 上午 com.campus.config.DbPool init
+信息: 数据库连接池初始化完成，大小: 5
+11月 11, 2026 12:14:21 上午 com.campus.config.DbSchema initTables
+信息: 数据库表结构初始化完成
+11月 11, 2026 12:14:21 上午 com.campus.config.DbSchema initSampleDataStatic
+信息: 数据库已有数据，跳过示例数据初始化
+
+╔══════════════════════════════════════════════════════╗
+║                                                      ║
+║       NirvanaFlower  校园活动平台  已启动             ║
+║                                                      ║
+╚══════════════════════════════════════════════════════╝
+
+  访问地址:  http://localhost:8080
+  数据库:    campus_activity.db
+  连接池:    5 连接
+  线程池:    8 线程
+
+  按 Ctrl+C 停止服务器
+

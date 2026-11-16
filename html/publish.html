@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园活动 - 发布活动</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/publish.css">
+</head>
+<body>
+
+<header class="top-nav">
+    <a href="../html/index.html" class="brand">
+        <div class="brand-icon">U</div>
+        校园活动
+    </a>
+    <div class="nav-links">
+        <a href="../html/index.html">首页</a>
+        <a href="../html/publish.html" class="active">发布活动</a>
+        <a href="../html/vip.html">会员</a>
+    </div>
+    <div class="user-area">
+        <span class="user-name" id="userAccount"></span>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
+    </div>
+</header>
+
+<main class="page-container narrow">
+
+    <div class="card" style="padding: 36px;">
+        <h1 style="margin:0 0 8px; font-size:24px;">发布新活动</h1>
+        <p style="margin:0 0 28px; color:var(--gray-500); font-size:15px;">填写活动信息，设置报名费，吸引更多参与者</p>
+
+        <form id="publishForm">
+
+            <div class="form-group">
+                <label class="form-label">活动名称 <span style="color:var(--danger)">*</span></label>
+                <input type="text" class="form-input" id="actName" placeholder="例如：AI时代职业规划论坛" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">活动分类 <span style="color:var(--danger)">*</span></label>
+                <select class="form-input" id="actCategory" required>
+                    <option value="">请选择分类</option>
+                    <option value="lecture">讲座论坛</option>
+                    <option value="sports">体育竞技</option>
+                    <option value="art">文艺演出</option>
+                    <option value="tech">科技创新</option>
+                    <option value="volunteer">志愿公益</option>
+                    <option value="social">社交聚会</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">活动介绍 <span style="color:var(--danger)">*</span></label>
+                <textarea class="form-input" id="actDesc" placeholder="详细描述活动内容、亮点、参与方式等..." rows="5" required></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group" style="flex:1;">
+                    <label class="form-label">活动日期 <span style="color:var(--danger)">*</span></label>
+                    <input type="date" class="form-input" id="actDate" required>
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label class="form-label">活动时间</label>
+                    <input type="time" class="form-input" id="actTime" value="14:00">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">活动地点 <span style="color:var(--danger)">*</span></label>
+                <input type="text" class="form-input" id="actLocation" placeholder="例如：北京大学 百周年纪念讲堂" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">所在学校 <span style="color:var(--danger)">*</span></label>
+                <input type="text" class="form-input" id="actSchool" placeholder="例如：北京大学" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">人数上限</label>
+                <input type="number" class="form-input" id="actMaxPeople" placeholder="不限则留空" min="1">
+            </div>
+
+            <!-- 报名费设置 - 核心商业化功能 -->
+            <div class="form-group">
+                <label class="form-label">报名费设置 <span style="color:var(--danger)">*</span></label>
+                <div class="fee-options">
+                    <label class="fee-option">
+                        <input type="radio" name="feeType" value="free" checked>
+                        <span class="fee-label">免费活动</span>
+                        <span class="fee-desc">不收取报名费</span>
+                    </label>
+                    <label class="fee-option">
+                        <input type="radio" name="feeType" value="paid">
+                        <span class="fee-label">收费活动</span>
+                        <span class="fee-desc">设置报名费，平台抽取10%服务费</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group" id="feeInput" hidden>
+                <label class="form-label">报名费金额 (元)</label>
+                <input type="number" class="form-input" id="actFee" placeholder="例如：29.9" min="0.01" step="0.01">
+                <div class="form-hint">平台将抽取报名费的10%作为服务费。例如报名费¥30，发布者实得¥27。</div>
+                <div class="fee-preview" id="feePreview" hidden>
+                    <div class="fee-detail">
+                        <span>报名费</span>
+                        <strong id="feeTotal">¥0</strong>
+                    </div>
+                    <div class="fee-detail">
+                        <span>平台服务费 (10%)</span>
+                        <strong id="feeCommission" style="color:var(--danger);">-¥0</strong>
+                    </div>
+                    <div class="fee-detail total">
+                        <span>发布者实得</span>
+                        <strong id="feeNet" style="color:var(--success);">¥0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 推广设置 -->
+            <div class="form-group">
+                <label class="form-label">推广设置</label>
+                <div class="promote-option">
+                    <label class="promote-toggle">
+                        <input type="checkbox" id="wantPromote">
+                        <span>购买首推位，让活动获得更多曝光</span>
+                    </label>
+                    <div class="promote-info" id="promoteInfo" hidden>
+                        <div class="promote-plans">
+                            <label class="plan-card">
+                                <input type="radio" name="promotePlan" value="basic">
+                                <div class="plan-content">
+                                    <h4>基础推广</h4>
+                                    <div class="plan-price">¥50/天</div>
+                                    <p>首页推荐位展示</p>
+                                </div>
+                            </label>
+                            <label class="plan-card">
+                                <input type="radio" name="promotePlan" value="premium" checked>
+                                <div class="plan-content">
+                                    <h4>高级推广</h4>
+                                    <div class="plan-price">¥120/天</div>
+                                    <p>首推位 + 分类置顶</p>
+                                </div>
+                            </label>
+                            <label class="plan-card">
+                                <input type="radio" name="promotePlan" value="ultimate">
+                                <div class="plan-content">
+                                    <h4>旗舰推广</h4>
+                                    <div class="plan-price">¥200/天</div>
+                                    <p>全站首推 + 弹窗推荐</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-group mt-16">
+                            <label class="form-label">推广天数</label>
+                            <input type="number" class="form-input" id="promoteDays" value="3" min="1" max="30" style="width:120px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">活动标签</label>
+                <input type="text" class="form-input" id="actTags" placeholder="用逗号分隔，例如：AI,职业规划,论坛">
+                <div class="form-hint">标签有助于参与者搜索到你的活动</div>
+            </div>
+
+            <div class="publish-actions">
+                <button type="button" class="btn btn-ghost btn-lg" onclick="history.back()">取消</button>
+                <button type="submit" class="btn btn-primary btn-lg" id="publishBtn">发布活动</button>
+            </div>
+
+        </form>
+    </div>
+
+</main>
+
+<footer>
+    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+</footer>
+
+<script src="../js/common.js"></script>
+<script src="../js/publish.js"></script>
+
+</html>
