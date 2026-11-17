@@ -21,13 +21,27 @@ async function loadProfile() {
         document.getElementById('pSchool').value = u.school || '';
         document.getElementById('pPhone').value = u.phone || '';
 
-        // 会员信息
-        const vipNames = { free: '普通用户', campus: '校园会员', premium: '高级会员' };
-        const vipName = vipNames[u.vipLevel] || u.vipLevel;
-        const expireText = u.vipExpire ? `，有效期至 ${u.vipExpire}` : '';
-        document.getElementById('vipBanner').textContent = `当前身份：${vipName}${expireText}`;
+        // 平台身份（校内公益免费）
+        const identity = u.userType === 'teacher'
+            ? `${u.college ? u.college + ' · ' : ''}老师`
+            : '学生';
+        document.getElementById('vipBanner').textContent = `苏州科技大学 · ${identity} · 校内公益免费平台`;
     } catch (err) {
         console.error('加载资料失败', err);
+    }
+}
+
+// ==================== 个人数据概览 ====================
+async function loadStats() {
+    try {
+        const data = await apiFetch('/api/user/stats');
+        if (!data.success) return;
+        document.getElementById('statHours').textContent = data.totalHours || 0;
+        document.getElementById('statAttended').textContent = data.attended || 0;
+        document.getElementById('statAbsent').textContent = data.absent || 0;
+        document.getElementById('statTotal').textContent = data.totalSignups || 0;
+    } catch (err) {
+        console.error('加载个人统计失败', err);
     }
 }
 
@@ -141,8 +155,9 @@ document.getElementById('pwdForm').addEventListener('submit', async (e) => {
 // ==================== 三个活动列表 ====================
 function renderActRow(act, showUnfav) {
     const catName = categoryMap[act.category] || act.category;
-    const feeText = act.fee > 0 ? `¥${act.fee}` : '免费';
-    const feeClass = act.fee > 0 ? 'row-fee' : 'row-fee free';
+    const hours = act.creditHours || 0;
+    const feeText = hours > 0 ? `${hours} 学时` : '无学时';
+    const feeClass = hours > 0 ? 'row-fee' : 'row-fee free';
 
     return `
         <div class="act-row" data-id="${act.id}">
@@ -174,7 +189,7 @@ async function loadList(apiPath, listId, countId, emptyText, showUnfav) {
         listEl.querySelectorAll('.act-row').forEach(row => {
             row.addEventListener('click', (e) => {
                 if (e.target.closest('.row-unfav')) return;
-                window.location.href = '../html/activity.html?id=' + row.dataset.id;
+                window.location.href = '../html/home.html';
             });
         });
 
@@ -210,8 +225,122 @@ async function loadList(apiPath, listId, countId, emptyText, showUnfav) {
     }
 }
 
+// ==================== 我的日历 ====================
+const CAL_GROUPS = [
+    { key: 'today', title: '今天' },
+    { key: 'week', title: '本周内' },
+    { key: 'later', title: '更晚' },
+    { key: 'ended', title: '已结束' }
+];
+
+// 活动结束时刻：优先用结束时间，缺省按当天 23:59
+function activityEndDate(act) {
+    if (!act.date) return null;
+    const t = act.endTime || '23:59';
+    const d = new Date(`${act.date}T${t}:00`);
+    return isNaN(d) ? new Date(act.date + 'T23:59:00') : d;
+}
+
+// 距今天数：0=今天，1=明天，负数=过去
+function dayDiff(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return Math.round((d - today) / 86400000);
+}
+
+function calendarGroupOf(act) {
+    const end = activityEndDate(act);
+    if (end && end < new Date()) return 'ended';
+    const diff = dayDiff(act.date);
+    if (diff <= 0) return 'today';
+    if (diff <= 7) return 'week';
+    return 'later';
+}
+
+function calendarBadge(act, group) {
+    if (group === 'ended') return { text: '已结束', cls: 'ended' };
+    const diff = dayDiff(act.date);
+    if (diff === 0) return { text: '今天', cls: 'today' };
+    if (diff === 1) return { text: '明天', cls: 'soon' };
+    return { text: `还有 ${diff} 天`, cls: 'soon' };
+}
+
+function renderCalendarRow(act, group) {
+    const hours = act.creditHours || 0;
+    const badge = calendarBadge(act, group);
+    return `
+        <div class="cal-row${group === 'ended' ? ' expired' : ''}" data-id="${act.id}">
+            <div class="cal-date">
+                <span class="cal-day">${escapeHtml(act.date)}</span>
+                <span class="cal-time">${escapeHtml(act.time)}${act.endTime ? ' - ' + escapeHtml(act.endTime) : ''}</span>
+            </div>
+            <div class="cal-info">
+                <div class="cal-title">
+                    <span class="cal-name">${escapeHtml(act.name)}</span>
+                    <span class="cal-badge ${badge.cls}">${badge.text}</span>
+                </div>
+                <div class="cal-meta">${escapeHtml(act.location)} · ${escapeHtml(act.school)}${hours > 0 ? ' · ' + hours + ' 学时' : ''}</div>
+            </div>
+            <button class="cal-remove" data-id="${act.id}" title="从日历移出">移出</button>
+        </div>
+    `;
+}
+
+async function loadCalendar() {
+    const listEl = document.getElementById('calendarList');
+    try {
+        const data = await apiFetch('/api/user/calendar');
+        const list = Array.isArray(data) ? data : [];
+
+        document.getElementById('calendarCount').textContent = list.length ? `共 ${list.length} 个安排` : '';
+
+        if (list.length === 0) {
+            listEl.innerHTML = '<div class="empty-tip">还没有加入日历的活动，去首页详情页点「加入我的日历」</div>';
+            return;
+        }
+
+        // 按今天 / 本周内 / 更晚 / 已结束分组，组内保持接口的时间顺序
+        const grouped = { today: [], week: [], later: [], ended: [] };
+        list.forEach(a => grouped[calendarGroupOf(a)].push(a));
+
+        listEl.innerHTML = CAL_GROUPS
+            .filter(g => grouped[g.key].length > 0)
+            .map(g => `
+                <div class="cal-group">
+                    <div class="cal-group-head">${g.title}<span>${grouped[g.key].length}</span></div>
+                    ${grouped[g.key].map(a => renderCalendarRow(a, g.key)).join('')}
+                </div>
+            `)
+            .join('');
+
+        listEl.querySelectorAll('.cal-remove').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (btn.disabled) return;
+                btn.disabled = true;
+                try {
+                    const res = await apiFetch(`/api/activities/${btn.dataset.id}/calendar`, { method: 'POST' });
+                    if (res.success && !res.inCalendar) {
+                        loadCalendar();
+                    } else {
+                        btn.disabled = false;
+                    }
+                } catch (err) {
+                    alert('网络错误');
+                    btn.disabled = false;
+                }
+            });
+        });
+    } catch (err) {
+        listEl.innerHTML = '<div class="empty-tip">加载失败，请刷新重试</div>';
+    }
+}
+
 // ==================== 初始化 ====================
 loadProfile();
+loadStats();
+loadCalendar();
 loadList('/api/user/signups', 'signupList', 'signupCount', '暂无报名的活动', false);
 loadList('/api/user/favorites', 'favList', 'favCount', '暂无收藏的活动', true);
 loadList('/api/user/activities', 'publishList', 'publishCount', '暂无发布的活动', false);

@@ -16,6 +16,11 @@ body {
     }
 }
 
+/* hidden 属性必须优先于组件自身的 display，否则占位层和隐藏卡片仍会显示 */
+.detail-panel [hidden] {
+    display: none !important;
+}
+
 /* 双栏布局 */
 .home-layout {
     flex: 1;
@@ -41,7 +46,7 @@ body {
     flex-shrink: 0;
     background: #fff;
     border-left: 1px solid var(--gray-200);
-    overflow-y: auto;
+    overflow: hidden;
     position: sticky;
     top: 60px;
     height: calc(100vh - 60px);
@@ -75,6 +80,32 @@ body {
 /* 详情内容 */
 .detail-content {
     padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 详情滚动区 */
+.detail-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* 底部固定报名操作栏 */
+.detail-footer {
+    flex-shrink: 0;
+    padding: 12px 20px 14px;
+    border-top: 1px solid var(--gray-200);
+    background: #fff;
+}
+
+.detail-footer .signup-card {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
 }
 
 .detail-close {
@@ -102,7 +133,7 @@ body {
 
 /* 详情头图 */
 .detail-banner {
-    height: 200px;
+    height: 160px;
     position: relative;
     overflow: hidden;
 }
@@ -447,16 +478,30 @@ body {
     .home-layout {
         flex-direction: column;
     }
+    /* 窄屏下详情改为从右侧滑入的浮层，点卡片即自动出现，无需向下滚动 */
     .detail-panel {
-        width: 100%;
-        border-left: none;
-        border-top: 1px solid var(--gray-200);
-        position: static;
-        height: auto;
-        max-height: 70vh;
+        position: fixed;
+        top: 60px;
+        right: 0;
+        width: min(440px, 100%);
+        height: calc(100vh - 60px);
+        max-height: none;
+        border-left: 1px solid var(--gray-200);
+        border-top: none;
+        box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 90;
+    }
+    .detail-panel.open:not(.empty) {
+        transform: translateX(0);
     }
     .detail-panel.empty {
         width: 100%;
+        transform: translateX(100%);
+    }
+    .detail-banner {
+        height: 120px;
     }
     .promote-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -520,4 +565,36 @@ body {
     padding: 40px 0;
     color: var(--gray-400);
     font-size: 14px;
+}
+
+/* ---- 新发布活动高亮 ---- */
+.activity-card.just-published {
+    outline: 3px solid #4f6ef7;
+    outline-offset: 3px;
+    animation: publishPulse 1.5s ease-out 2;
+}
+
+.activity-card.just-published .card-body h3::after {
+    content: '刚刚发布';
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    background: #4f6ef7;
+    border-radius: 999px;
+    vertical-align: middle;
+}
+
+@keyframes publishPulse {
+    0% { box-shadow: 0 0 0 0 rgba(79, 110, 247, 0.45); }
+    100% { box-shadow: 0 0 0 16px rgba(79, 110, 247, 0); }
+}
+
+/* ---- 「我的日历」已加入状态 ---- */
+#calendarBtn.added {
+    color: var(--success);
+    border-color: var(--success);
+    background: #f0fdf4;
 }

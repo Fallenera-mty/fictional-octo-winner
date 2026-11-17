@@ -133,7 +133,7 @@ async function loadUsers() {
                 <td>${escapeHtml(u.account)}</td>
                 <td>${escapeHtml(u.nickname)}</td>
                 <td>${escapeHtml(u.school || '-')}</td>
-                <td>${vipNameMap[u.vipLevel] || u.vipLevel}</td>
+                <td>${u.userType === 'teacher' ? '老师' : '学生'}</td>
                 <td>${u.role === 'admin' ? '<span class="status-badge status-admin">管理员</span>' : '普通用户'}</td>
                 <td>
                     ${u.banned

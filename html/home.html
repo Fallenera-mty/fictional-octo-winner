@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>校园活动平台</title>
+    <title>苏州科技大学校园活动平台</title>
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/home.css">
 </head>
@@ -11,14 +11,13 @@
 
 <header class="top-nav">
     <a href="../html/home.html" class="brand">
-        <div class="brand-icon">U</div>
-        校园活动
+        <div class="brand-icon">苏</div>
+        苏科大活动
     </a>
     <div class="nav-links">
         <a href="../html/home.html" class="active">首页</a>
-        <a href="../html/publish.html">发布活动</a>
-        <a href="../html/vip.html">会员</a>
-        <a href="../html/stats.html">数据</a>
+        <a href="../html/publish.html" class="nav-publish">发布活动</a>
+        <a href="../html/profile.html">我的</a>
     </div>
     <div class="user-area">
         <span class="user-name" id="userAccount"></span>
@@ -32,7 +31,7 @@
     <div class="list-panel">
         <!-- 搜索栏 -->
         <div class="search-bar">
-            <input type="text" class="form-input" id="searchInput" placeholder="搜索活动名称、学校、标签...">
+            <input type="text" class="form-input" id="searchInput" placeholder="搜索活动名称、地点、标签...">
             <button class="btn btn-primary" id="searchBtn">搜索</button>
         </div>
 
@@ -47,11 +46,11 @@
             <button class="cat-btn" data-cat="social">社交聚会</button>
         </div>
 
-        <!-- 首推活动 -->
+        <!-- 推荐活动 -->
         <section class="section" id="promoteSection">
             <div class="section-header">
-                <h2>首推活动</h2>
-                <span class="promote-badge">首推</span>
+                <h2>推荐活动</h2>
+                <span class="promote-badge">推荐</span>
             </div>
             <div class="promote-grid" id="promoteGrid"></div>
         </section>
@@ -81,6 +80,7 @@
             <p>点击左侧活动查看详情</p>
         </div>
         <div class="detail-content" id="detailContent" hidden>
+            <div class="detail-scroll">
             <!-- 关闭按钮 -->
             <button class="detail-close" id="detailClose">&times;</button>
 
@@ -103,15 +103,27 @@
                 <div class="detail-tags" id="detailTags"></div>
             </div>
 
-            <!-- 报名卡片 -->
-            <div class="card signup-card">
-                <div class="signup-price">
-                    <span class="price-label">报名费</span>
-                    <span class="price-amount" id="detailPrice"></span>
+            <!-- 现场签到卡片 -->
+            <div class="card checkin-card" id="checkinCard" hidden>
+                <h3>现场签到</h3>
+                <p class="checkin-status" id="checkinStatusText"></p>
+
+                <!-- 参与者：输入签到码 -->
+                <div id="attendeeCheckin" hidden>
+                    <input type="text" class="form-input" id="checkinCodeInput" placeholder="输入发布者出示的签到码">
+                    <button class="btn btn-primary btn-block btn-sm" id="checkinBtn" style="margin-top:10px;">确认签到</button>
                 </div>
-                <div class="signup-info" id="detailSignupInfo"></div>
-                <button class="btn btn-primary btn-block btn-lg" id="signupBtn">立即报名</button>
-                <div class="signup-hint">报名后可参加活动，活动结束后可评分</div>
+
+                <!-- 发布者：生成签到码 -->
+                <div id="publisherCheckin" hidden>
+                    <button class="btn btn-primary btn-block btn-sm" id="genCodeBtn">生成签到码</button>
+                    <div id="codeResult" hidden style="margin-top:10px;">
+                        <input type="text" class="form-input" id="checkinCodeDisplay" readonly
+                               style="font-family:monospace; text-align:center;">
+                        <button class="btn btn-ghost btn-block btn-sm" id="copyCodeBtn" style="margin-top:8px;">复制签到码</button>
+                        <p class="checkin-status" id="codeExpireText" style="margin-top:8px;"></p>
+                    </div>
+                </div>
             </div>
 
             <!-- 评分卡片 -->
@@ -131,7 +143,26 @@
                     <button class="btn btn-primary btn-block btn-sm" id="submitRating" style="margin-top:10px;">提交评分</button>
                 </div>
                 <div class="rating-locked" id="ratingLocked">
-                    <p style="font-size:14px; color:var(--gray-400);">报名后可对活动进行评分</p>
+                    <p style="font-size:14px; color:var(--gray-400);">报名并完成现场签到后才可评分</p>
+                </div>
+            </div>
+            </div><!-- /detail-scroll -->
+
+            <!-- 报名操作栏：固定在详情面板底部，不用滑动就能报名 -->
+            <div class="detail-footer">
+                <div class="signup-card">
+                    <div class="signup-price">
+                        <span class="price-label">学时奖励</span>
+                        <span class="price-amount" id="detailPrice"></span>
+                    </div>
+                    <div class="signup-info" id="detailSignupInfo"></div>
+                    <button class="btn btn-primary btn-block btn-lg" id="signupBtn">立即报名</button>
+                    <button class="btn btn-ghost btn-block btn-sm" id="calendarBtn" type="button"
+                            style="margin-top:8px;">加入我的日历</button>
+                    <button class="btn btn-ghost btn-block btn-sm" id="cancelSignupBtn" hidden
+                            style="margin-top:8px; color:var(--gray-500);">取消报名</button>
+                    <div class="checkin-status" id="conflictNotice" hidden
+                         style="margin-top:10px; padding:8px 10px; background:#fff7e6; border-radius:8px;"></div>
                 </div>
             </div>
         </div>
@@ -140,7 +171,7 @@
 </main>
 
 <footer>
-    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+    <small>Copyright &copy; 2026 苏州科技大学校园活动平台 · 校内公益免费</small>
 </footer>
 
 <script src="../js/common.js"></script>

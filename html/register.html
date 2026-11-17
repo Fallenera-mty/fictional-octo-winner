@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>校园活动 - 注册</title>
+    <title>苏科大活动 - 注册</title>
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/register.css">
 </head>
@@ -11,13 +11,11 @@
 
 <header class="top-nav">
     <a href="../html/index.html" class="brand">
-        <div class="brand-icon">U</div>
-        校园活动
+        <div class="brand-icon">苏</div>
+        苏科大活动
     </a>
     <div class="nav-links">
         <a href="../html/index.html">首页</a>
-        <a href="../html/publish.html">发布活动</a>
-        <a href="../html/vip.html">会员</a>
     </div>
     <div class="user-area">
         <a href="../html/login.html" class="btn btn-outline btn-sm">登录</a>
@@ -27,8 +25,8 @@
 <main>
     <div class="register-card">
         <div class="register-header">
-            <h1>加入校园活动</h1>
-            <p class="subtitle">发布活动、参与社交、发现精彩校园生活</p>
+            <h1>加入苏科大活动</h1>
+            <p class="subtitle">苏州科技大学学生专属，免费参与校内活动</p>
         </div>
 
         <form id="registerForm">
@@ -38,14 +36,35 @@
                 <div id="accountErr" class="form-error" hidden>账号需为4~16位字母、数字或下划线</div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="nicknameGroup">
                 <label class="form-label">昵称</label>
                 <input type="text" class="form-input" placeholder="给自己取个名字" name="nickname" id="nickname" required>
             </div>
 
             <div class="form-group">
+                <label class="form-label">身份</label>
+                <select class="form-input" id="userType" name="userType">
+                    <option value="student">学生</option>
+                    <option value="teacher">老师</option>
+                </select>
+                <div class="form-hint">老师可以发布活动，学生可以报名参加并累计学时</div>
+            </div>
+
+            <div class="form-group" id="teacherNoGroup" style="display:none">
+                <label class="form-label">老师工号</label>
+                <input type="text" class="form-input" id="teacherNo" placeholder="请输入老师工号">
+                <div class="form-error" id="teacherNoErr" hidden>请填写老师工号</div>
+            </div>
+
+            <div class="form-group" id="collegeGroup" style="display:none">
+                <label class="form-label">所在学院</label>
+                <input type="text" class="form-input" id="college" placeholder="例如：电子与信息工程学院">
+                <div class="form-error" id="collegeErr" hidden>请填写所在学院</div>
+            </div>
+
+            <div class="form-group">
                 <label class="form-label">学校</label>
-                <input type="text" class="form-input" placeholder="所在学校名称" name="school" id="school" required>
+                <input type="text" class="form-input" value="苏州科技大学" name="school" id="school" readonly required>
             </div>
 
             <div class="form-group">
@@ -89,7 +108,7 @@
 </main>
 
 <footer>
-    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
+    <small>Copyright &copy; 2026 苏州科技大学校园活动平台 · 校内公益免费</small>
 </footer>
 
 <script src="../js/register.js"></script>

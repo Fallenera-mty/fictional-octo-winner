@@ -53,6 +53,19 @@ function initUserArea() {
         });
     }
 
+    // 老师/管理员：显示“发布活动”；学生隐藏
+    try {
+        const user = JSON.parse(localStorage.getItem('campus_user') || 'null');
+        applyRoleNav(user);
+        apiFetch('/api/user').then(d => {
+            const u = d.user || d;
+            if (u && u.account) {
+                localStorage.setItem('campus_user', JSON.stringify(u));
+                applyRoleNav(u);
+            }
+        }).catch(() => {});
+    } catch (e) {}
+
     // 管理员：导航栏动态插入“后台”入口
     try {
         const user = JSON.parse(localStorage.getItem('campus_user') || 'null');
@@ -67,6 +80,14 @@ function initUserArea() {
             }
         }
     } catch (e) {}
+}
+
+// 根据身份显示/隐藏发布活动入口
+function applyRoleNav(user) {
+    const canPublish = !!user && (user.userType === 'teacher' || user.role === 'admin');
+    document.querySelectorAll('.nav-publish').forEach(a => {
+        a.style.display = canPublish ? '' : 'none';
+    });
 }
 
 // ==================== 系统时间动态显示（每秒更新） ====================

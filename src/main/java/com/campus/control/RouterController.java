@@ -11,7 +11,6 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.logging.Logger;
@@ -32,6 +31,8 @@ public final class RouterController {
         server.createContext("/api/user/activities", wrap(RouterController::handleMyActivities));
         server.createContext("/api/user/signups", wrap(RouterController::handleMySignups));
         server.createContext("/api/user/favorites", wrap(RouterController::handleMyFavorites));
+        server.createContext("/api/user/calendar", wrap(RouterController::handleMyCalendar));
+        server.createContext("/api/user/stats", wrap(RouterController::handleUserStats));
         server.createContext("/api/user", wrap(RouterController::handleUser));
         server.createContext("/api/activities", wrap(RouterController::handleActivities));
         server.createContext("/api/vip/buy", wrap(RouterController::handleVipBuy));
@@ -58,7 +59,8 @@ public final class RouterController {
         var user = UserService.getInstance().register(
             (String)p.getOrDefault("account",""), (String)p.getOrDefault("password",""),
             (String)p.getOrDefault("nickname",""), (String)p.getOrDefault("school",""),
-            (String)p.getOrDefault("phone",""));
+            (String)p.getOrDefault("phone",""), (String)p.getOrDefault("userType","student"),
+            (String)p.getOrDefault("teacherNo",""), (String)p.getOrDefault("college",""));
         var resp = new LinkedHashMap<String, Object>(); resp.put("user", user.toMap());
         HttpHelper.sendSuccess(e, resp);
     }
@@ -110,6 +112,16 @@ public final class RouterController {
         HttpHelper.sendJsonList(e, 200, ActivityService.getInstance().getMyFavorites(account));
     }
 
+    private static void handleMyCalendar(HttpExchange e) throws Exception {
+        var account = AuthInterceptor.requireLogin(e);
+        HttpHelper.sendJsonList(e, 200, ActivityService.getInstance().getMyCalendar(account));
+    }
+
+    private static void handleUserStats(HttpExchange e) throws Exception {
+        var account = AuthInterceptor.requireLogin(e);
+        HttpHelper.sendSuccess(e, ActivityService.getInstance().getUserStats(account));
+    }
+
     // ==================== 活动 ====================
 
     private static void handleActivities(HttpExchange e) throws Exception {
@@ -129,19 +141,22 @@ public final class RouterController {
         } else if ("POST".equals(e.getRequestMethod())) {
             var account = AuthInterceptor.requireLogin(e);
             var user = UserService.getInstance().getUser(account);
-            if ("free".equals(user.vipLevel)) throw com.campus.model.ApiException.forbidden("普通用户无法发布活动，请先开通会员");
+            if (!"admin".equals(user.role) && !"teacher".equals(user.userType))
+                throw com.campus.model.ApiException.forbidden("只有老师可以发布活动");
             var p = JsonUtil.parse(HttpHelper.readBody(e));
             var actMap = ActivityService.getInstance().createActivity(account,
                 (String)p.getOrDefault("name",""), (String)p.getOrDefault("category",""),
                 (String)p.getOrDefault("description",""), (String)p.getOrDefault("date",""),
-                (String)p.getOrDefault("time","14:00"), (String)p.getOrDefault("location",""),
+                (String)p.getOrDefault("time","14:00"), (String)p.getOrDefault("endTime",""),
+                (String)p.getOrDefault("location",""),
                 (String)p.getOrDefault("school",""),
                 p.containsKey("maxPeople") ? ((Number)p.get("maxPeople")).intValue() : 0,
                 p.containsKey("fee") ? ((Number)p.get("fee")).doubleValue() : 0,
                 (String)p.getOrDefault("tags",""),
                 p.containsKey("promoted") && (boolean)p.getOrDefault("promoted",false),
                 (String)p.getOrDefault("promotePlan",""),
-                p.containsKey("promoteDays") ? ((Number)p.get("promoteDays")).intValue() : 0);
+                p.containsKey("promoteDays") ? ((Number)p.get("promoteDays")).intValue() : 0,
+                p.containsKey("creditHours") ? ((Number)p.get("creditHours")).intValue() : 0);
             var resp = new LinkedHashMap<String, Object>(); resp.put("activity", actMap);
             HttpHelper.sendSuccess(e, resp);
         } else {
@@ -161,15 +176,35 @@ public final class RouterController {
         switch (action) {
             case "signup" -> {
                 var account = AuthInterceptor.requireLogin(e);
-                var count = ActivityService.getInstance().signup(account, id);
-                var resp = new LinkedHashMap<String, Object>(); resp.put("signupCount", count);
-                HttpHelper.sendSuccess(e, resp);
+                HttpHelper.sendSuccess(e, ActivityService.getInstance().signup(account, id));
             }
             case "cancel" -> {
                 var account = AuthInterceptor.requireLogin(e);
-                var count = ActivityService.getInstance().cancelSignup(account, id);
-                var resp = new LinkedHashMap<String, Object>(); resp.put("signupCount", count);
+                HttpHelper.sendSuccess(e, ActivityService.getInstance().cancelSignup(account, id));
+            }
+            case "conflicts" -> {
+                var account = AuthInterceptor.requireLogin(e);
+                HttpHelper.sendJsonList(e, 200, ActivityService.getInstance().findConflicts(account, id));
+            }
+            case "calendar" -> {
+                var account = AuthInterceptor.requireLogin(e);
+                boolean inCalendar = ActivityService.getInstance().toggleCalendar(account, id);
+                var resp = new LinkedHashMap<String, Object>(); resp.put("inCalendar", inCalendar);
                 HttpHelper.sendSuccess(e, resp);
+            }
+            case "checkin" -> {
+                var account = AuthInterceptor.requireLogin(e);
+                if (parts.length >= 6 && "code".equals(parts[5])) {
+                    if (!"POST".equals(e.getRequestMethod()))
+                        throw com.campus.model.ApiException.badRequest("Method Not Allowed");
+                    HttpHelper.sendSuccess(e, ActivityService.getInstance().createCheckinCode(account, id));
+                } else if ("POST".equals(e.getRequestMethod())) {
+                    var p = JsonUtil.parse(HttpHelper.readBody(e));
+                    var result = ActivityService.getInstance().checkin(account, id, (String)p.getOrDefault("code",""));
+                    HttpHelper.sendSuccess(e, result);
+                } else {
+                    HttpHelper.sendSuccess(e, ActivityService.getInstance().getCheckinStatus(account, id));
+                }
             }
             case "rate" -> {
                 var account = AuthInterceptor.requireLogin(e);
@@ -202,6 +237,9 @@ public final class RouterController {
             }
             default -> {
                 var actMap = ActivityService.getInstance().getActivityDetail(id);
+                // 已登录时附带「是否已加入我的日历」，供详情页按钮回显
+                var account = AuthInterceptor.getLoginAccount(e);
+                if (account != null) actMap.put("inCalendar", ActivityService.getInstance().isInCalendar(account, id));
                 var resp = new LinkedHashMap<String, Object>(); resp.put("activity", actMap);
                 HttpHelper.sendSuccess(e, resp);
             }

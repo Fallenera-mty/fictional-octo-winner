@@ -7,9 +7,10 @@ import java.util.*;
  */
 public class ActivityDO {
     public int id;
-    public String name, category, description, date, time, location, school;
+    public String name, category, description, date, time, endTime, location, school;
     public int maxPeople;
     public double fee;
+    public int creditHours;
     public String publisher, tags;
     public boolean promoted;
     public String promotePlan;
@@ -25,10 +26,12 @@ public class ActivityDO {
         m.put("description", description);
         m.put("date", date);
         m.put("time", time);
+        m.put("endTime", endTime);
         m.put("location", location);
         m.put("school", school);
         m.put("maxPeople", maxPeople);
         m.put("fee", fee);
+        m.put("creditHours", creditHours);
         m.put("publisher", publisher);
         m.put("tags", tags);
         m.put("promoted", promoted);

@@ -15,14 +15,25 @@ public final class UserService {
     private UserService() {}
     public static UserService getInstance() { return INSTANCE; }
 
-    public UserDO register(String account, String password, String nickname, String school, String phone) throws Exception {
-        if (account.isEmpty() || password.isEmpty() || nickname.isEmpty())
-            throw ApiException.badRequest("账号、密码和昵称不能为空");
+    public UserDO register(String account, String password, String nickname, String school, String phone,
+                           String userType, String teacherNo, String college) throws Exception {
+        if (account.isEmpty() || password.isEmpty())
+            throw ApiException.badRequest("账号和密码不能为空");
+        boolean isTeacher = "teacher".equals(userType);
+        if (!isTeacher && (nickname == null || nickname.isEmpty()))
+            throw ApiException.badRequest("昵称不能为空");
+        if (isTeacher && (teacherNo == null || teacherNo.isBlank() || college == null || college.isBlank()))
+            throw ApiException.badRequest("老师注册需填写工号和所在学院");
         if (UserDao.getInstance().exists(account))
             throw ApiException.conflict("该账号已注册");
         var user = new UserDO();
-        user.account = account; user.password = SecurityUtil.hash(account, password); user.nickname = nickname;
+        user.account = account; user.password = SecurityUtil.hash(account, password);
+        // 老师身份隐藏昵称显示，后端自动用工号代填，避免出现"未命名老师"
+        user.nickname = isTeacher ? (teacherNo.isBlank() ? account : teacherNo.trim()) : nickname;
         user.school = school; user.phone = phone; user.vipLevel = "free";
+        user.userType = isTeacher ? "teacher" : "student";
+        user.teacherNo = isTeacher ? teacherNo.trim() : "";
+        user.college = isTeacher ? college.trim() : "";
         UserDao.getInstance().insert(user);
         return UserDao.getInstance().findByAccount(account);
     }

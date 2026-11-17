@@ -2,91 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>校园活动 - 数据大屏</title>
-    <link rel="stylesheet" href="../css/common.css">
-    <link rel="stylesheet" href="../css/stats.css">
+    <meta http-equiv="refresh" content="0; url=profile.html">
+    <title>苏科大活动 - 个人中心</title>
 </head>
 <body>
-
-<header class="top-nav">
-    <a href="../html/home.html" class="brand">
-        <div class="brand-icon">U</div>
-        校园活动
-    </a>
-    <div class="nav-links">
-        <a href="../html/home.html">首页</a>
-        <a href="../html/publish.html">发布活动</a>
-        <a href="../html/vip.html">会员</a>
-        <a href="../html/stats.html" class="active">数据</a>
-    </div>
-    <div class="user-area">
-        <span class="user-name" id="userAccount"></span>
-        <button class="btn btn-ghost btn-sm" id="logoutBtn">退出</button>
-    </div>
-</header>
-
-<main class="page-container">
-
-    <div class="stats-title">
-        <h1>平台数据一览</h1>
-        <p>实时统计校园活动的运营情况</p>
-    </div>
-
-    <!-- 数字统计卡片 -->
-    <div class="stats-grid" id="statsGrid">
-        <div class="card stat-card">
-            <div class="stat-icon" style="background: var(--primary-bg); color: var(--primary);">👥</div>
-            <div class="stat-info">
-                <div class="stat-num" id="statUsers">-</div>
-                <div class="stat-label">注册用户</div>
-            </div>
-        </div>
-        <div class="card stat-card">
-            <div class="stat-icon" style="background: #fef3c7; color: #d97706;">📋</div>
-            <div class="stat-info">
-                <div class="stat-num" id="statActivities">-</div>
-                <div class="stat-label">发布活动</div>
-            </div>
-        </div>
-        <div class="card stat-card">
-            <div class="stat-icon" style="background: #dcfce7; color: #16a34a;">✅</div>
-            <div class="stat-info">
-                <div class="stat-num" id="statSignups">-</div>
-                <div class="stat-label">活动报名</div>
-            </div>
-        </div>
-        <div class="card stat-card">
-            <div class="stat-icon" style="background: #fee2e2; color: #dc2626;">⭐</div>
-            <div class="stat-info">
-                <div class="stat-num" id="statRatings">-</div>
-                <div class="stat-label">评价条数</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 图表区 -->
-    <div class="chart-grid">
-        <div class="card chart-card">
-            <h3>各类别活动数量</h3>
-            <div class="chart-box" id="categoryChart"></div>
-            <div class="chart-fallback" id="categoryFallback" hidden></div>
-        </div>
-        <div class="card chart-card">
-            <h3>会员等级分布</h3>
-            <div class="chart-box" id="vipChart"></div>
-            <div class="chart-fallback" id="vipFallback" hidden></div>
-        </div>
-    </div>
-
-</main>
-
-<footer>
-    <small>Copyright &copy; 2025 校园活动平台 All Rights Reserved.</small>
-</footer>
-
-<script src="../lib/echarts.min.js"></script>
-<script src="../js/common.js"></script>
-<script src="../js/stats.js"></script>
-
+    <p style="font-family:sans-serif; padding:24px;">正在进入个人中心，如未自动跳转请<a href="profile.html">点击这里</a>。</p>
+    <script>location.replace('profile.html');</script>
+</body>
 </html>

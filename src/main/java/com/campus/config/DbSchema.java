@@ -31,6 +31,9 @@ public final class DbSchema {
                         vip_level  TEXT DEFAULT 'free',
                         vip_expire TEXT DEFAULT NULL,
                         role       TEXT DEFAULT 'user',
+                        user_type  TEXT DEFAULT 'student',
+                        teacher_no TEXT DEFAULT '',
+                        college    TEXT DEFAULT '',
                         banned     INTEGER DEFAULT 0
                     )
                 """);
@@ -42,10 +45,12 @@ public final class DbSchema {
                         description TEXT DEFAULT '',
                         date        TEXT NOT NULL,
                         time        TEXT DEFAULT '14:00',
+                        end_time    TEXT DEFAULT '',
                         location    TEXT NOT NULL,
                         school      TEXT NOT NULL,
                         max_people  INTEGER DEFAULT 0,
                         fee         REAL DEFAULT 0,
+                        credit_hours INTEGER DEFAULT 0,
                         publisher   TEXT NOT NULL,
                         tags        TEXT DEFAULT '',
                         promoted    INTEGER DEFAULT 0,
@@ -58,9 +63,11 @@ public final class DbSchema {
                 """);
                 stmt.executeUpdate("""
                     CREATE TABLE IF NOT EXISTS signups (
-                        activity_id INTEGER NOT NULL,
-                        account     TEXT NOT NULL,
-                        created_at  INTEGER DEFAULT (strftime('%s','now')*1000),
+                        activity_id   INTEGER NOT NULL,
+                        account       TEXT NOT NULL,
+                        created_at    INTEGER DEFAULT (strftime('%s','now')*1000),
+                        checked_in_at INTEGER DEFAULT NULL,
+                        status        TEXT DEFAULT 'confirmed',
                         PRIMARY KEY (activity_id, account)
                     )
                 """);
@@ -76,6 +83,14 @@ public final class DbSchema {
                 """);
                 stmt.executeUpdate("""
                     CREATE TABLE IF NOT EXISTS favorites (
+                        account     TEXT NOT NULL,
+                        activity_id INTEGER NOT NULL,
+                        created_at  INTEGER DEFAULT (strftime('%s','now')*1000),
+                        PRIMARY KEY (account, activity_id)
+                    )
+                """);
+                stmt.executeUpdate("""
+                    CREATE TABLE IF NOT EXISTS calendar_items (
                         account     TEXT NOT NULL,
                         activity_id INTEGER NOT NULL,
                         created_at  INTEGER DEFAULT (strftime('%s','now')*1000),
@@ -111,7 +126,14 @@ public final class DbSchema {
                 String[] upgrades = {
                     "ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'user'",
                     "ALTER TABLE users ADD COLUMN banned INTEGER DEFAULT 0",
-                    "ALTER TABLE activities ADD COLUMN status INTEGER DEFAULT 1"
+                    "ALTER TABLE activities ADD COLUMN status INTEGER DEFAULT 1",
+                    "ALTER TABLE activities ADD COLUMN credit_hours INTEGER DEFAULT 0",
+                    "ALTER TABLE activities ADD COLUMN end_time TEXT DEFAULT ''",
+                    "ALTER TABLE users ADD COLUMN user_type TEXT DEFAULT 'student'",
+                    "ALTER TABLE users ADD COLUMN teacher_no TEXT DEFAULT ''",
+                    "ALTER TABLE users ADD COLUMN college TEXT DEFAULT ''",
+                    "ALTER TABLE signups ADD COLUMN checked_in_at INTEGER DEFAULT NULL",
+                    "ALTER TABLE signups ADD COLUMN status TEXT DEFAULT 'confirmed'"
                 };
                 for (var sql : upgrades) {
                     try (var ustmt = conn.createStatement()) { ustmt.executeUpdate(sql); }
@@ -130,10 +152,104 @@ public final class DbSchema {
                     "CREATE INDEX IF NOT EXISTS idx_comment_activity ON comments(activity_id)"
                 };
                 for (var idx : indexes) stmt.executeUpdate(idx);
+                migrateLegacyContent(conn);
+                backfillCreditHours(conn);
+                backfillEndTime(conn);
+                // 演示账号保持老师身份，便于体验发布活动
+                try (var demoStmt = conn.createStatement()) {
+                    demoStmt.executeUpdate("UPDATE users SET user_type='teacher', "
+                            + "teacher_no=CASE WHEN teacher_no='' OR teacher_no IS NULL THEN 'T2019001' ELSE teacher_no END, "
+                            + "college=CASE WHEN college='' OR college IS NULL THEN '电子与信息工程学院' ELSE college END "
+                            + "WHERE account='demo'");
+                }
             }
             LOG.info("数据库表结构初始化完成");
         } finally {
             pool.release(conn);
+        }
+    }
+
+    /** 苏州科技大学校内免费示例活动 */
+    private static Object[][] sampleActivities() {
+        return new Object[][]{
+            {"石湖讲坛：AI 时代的大学生职业规划","lecture","面向苏科大全体学生，邀请校友导师与校就业中心老师，围绕 AI 时代的职业选择、实习准备和简历面试展开分享，现场可一对一咨询。","2026-12-05","14:00","石湖校区 C6-301","苏州科技大学",300,0,"demo","AI,职业规划,讲座",1,"",0,2},
+            {"苏科大新生杯 3v3 篮球赛","sports","各学院组队参赛，三人一队，可跨专业组队。比赛在石湖校区体育馆进行，提供裁判、饮用水与奖品，欢迎到场观赛。","2026-12-12","10:00","石湖校区 体育馆","苏州科技大学",500,0,"demo","篮球,新生杯,体育",1,"",0,1},
+            {"苏科大 48H 黑客马拉松","tech","48 小时组队开发，主题为智慧校园。提供机房、网络、导师答疑和夜宵，优秀作品将在校创新创业中心孵化。","2026-12-20","09:00","石湖校区 C6-501 机房","苏州科技大学",200,0,"test","编程,创新,黑客马拉松",0,"",0,4},
+            {"石湖冬日校园音乐节","art","校乐队、社团与特邀嘉宾轮番演出，现场设创意市集和热饮区，凭学生证免费入场。","2027-01-05","18:00","石湖校区 师陶园","苏州科技大学",1000,0,"demo","音乐节,社团,演出",0,"",0,2},
+            {"寒假乡村支教志愿者招募","volunteer","面向全校招募支教志愿者，出发前统一培训，提供交通补贴与志愿服务证明，可认定第二课堂学分。","2027-01-10","09:00","石湖校区 学生活动中心","苏州科技大学",100,0,"test","支教,志愿,公益",0,"",0,3},
+            {"石湖读书会 · 以书会友","social","每月一期，本期共读《人类简史》。现场自由分享读书笔记，结束后可结伴去图书馆自习。","2026-11-28","14:00","石湖校区 图书馆报告厅","苏州科技大学",60,0,"test","读书,分享,社交",0,"",0,1},
+            {"校友创业经验分享会","lecture","邀请三位苏科大校友回校分享创业经历，覆盖项目起步、团队搭建与校园资源利用，设有自由提问环节。","2026-12-08","15:00","石湖校区 C6-201","苏州科技大学",200,0,"demo","创业,校友,分享",0,"",0,2},
+            {"校园荧光夜跑","sports","沿石湖校区环校路线夜跑 5 公里，领取荧光手环和补给，完赛可获纪念徽章，适合零基础参与。","2026-12-15","19:00","石湖校区 田径场","苏州科技大学",128,0,"test","夜跑,体育,荧光",0,"",0,1},
+            {"【已结束】2025 春季社团招新回顾展","social","往期社团招新回顾展示，用于演示过期活动不可报名的平台规则。","2025-06-01","09:00","石湖校区 学生活动中心","苏州科技大学",100,0,"demo","往期,社团,回顾",0,"",0,0},
+            {"【已满员】石湖夜跑体验场","social","小规模夜跑体验活动，名额有限先到先得，用于演示人数上限与候补规则。","2026-11-20","19:00","石湖校区 田径场","苏州科技大学",1,0,"demo","夜跑,体验,候补",0,"",0,1}
+        };
+    }
+
+    /** 旧版跨校示例数据的学校标识 */
+    private static final String[] LEGACY_SCHOOLS = {
+        "北京大学", "清华大学", "浙江大学", "武汉大学", "复旦大学",
+        "南京大学", "上海交大", "中山大学", "花海平台"
+    };
+
+    /** 把旧库中的跨校示例活动、用户学校原地替换为苏州科技大学，仅执行一次 */
+    private static void migrateLegacyContent(Connection conn) throws SQLException {
+        String placeholders = String.join(",", java.util.Collections.nCopies(LEGACY_SCHOOLS.length, "?"));
+        boolean legacy;
+        try (var ps = conn.prepareStatement(
+                "SELECT COUNT(*) FROM activities WHERE school IN (" + placeholders + ")")) {
+            for (int i = 0; i < LEGACY_SCHOOLS.length; i++) ps.setString(i + 1, LEGACY_SCHOOLS[i]);
+            try (var rs = ps.executeQuery()) {
+                legacy = rs.next() && rs.getInt(1) > 0;
+            }
+        }
+        if (!legacy) return;
+
+        try (var ps = conn.prepareStatement(
+                "UPDATE users SET school='苏州科技大学' WHERE school IN (" + placeholders + ")")) {
+            for (int i = 0; i < LEGACY_SCHOOLS.length; i++) ps.setString(i + 1, LEGACY_SCHOOLS[i]);
+            ps.executeUpdate();
+        }
+
+        Object[][] acts = sampleActivities();
+        String updateSql = "UPDATE activities SET name=?,category=?,description=?,date=?,time=?,"
+                + "location=?,school=?,max_people=?,fee=?,publisher=?,tags=?,promoted=?,"
+                + "promote_plan=?,promote_days=?,credit_hours=? WHERE id=? AND school IN (" + placeholders + ")";
+        try (var ps = conn.prepareStatement(updateSql)) {
+            for (int r = 0; r < acts.length; r++) {
+                Object[] a = acts[r];
+                for (int i = 0; i < a.length; i++) ps.setObject(i + 1, a[i]);
+                ps.setInt(16, r + 1);
+                for (int i = 0; i < LEGACY_SCHOOLS.length; i++) ps.setString(17 + i, LEGACY_SCHOOLS[i]);
+                ps.executeUpdate();
+            }
+        }
+        LOG.info("已将示例数据替换为苏州科技大学免费活动");
+    }
+
+    /** 为已有示例活动补全学时奖励（历史上学时列默认为 0 时执行一次） */
+    private static void backfillCreditHours(Connection conn) throws SQLException {
+        try (var stmt = conn.createStatement();
+             var rs = stmt.executeQuery("SELECT COUNT(*) FROM activities WHERE credit_hours > 0")) {
+            if (rs.next() && rs.getInt(1) > 0) return;
+        }
+        Object[][] acts = sampleActivities();
+        try (var ps = conn.prepareStatement("UPDATE activities SET credit_hours=? WHERE id=?")) {
+            for (int r = 0; r < acts.length; r++) {
+                ps.setObject(1, acts[r][14]);
+                ps.setInt(2, r + 1);
+                ps.executeUpdate();
+            }
+        }
+    }
+
+    /** 为历史活动补全结束时间：默认开始时间 +2 小时，跨天则截到 23:59 */
+    private static void backfillEndTime(Connection conn) throws SQLException {
+        try (var ps = conn.prepareStatement(
+                "UPDATE activities SET end_time = CASE "
+              + "WHEN strftime('%H:%M', datetime(date || ' ' || time, '+2 hours')) <= time THEN '23:59' "
+              + "ELSE strftime('%H:%M', datetime(date || ' ' || time, '+2 hours')) END "
+              + "WHERE end_time IS NULL OR end_time = ''")) {
+            ps.executeUpdate();
         }
     }
 
@@ -151,11 +267,11 @@ public final class DbSchema {
             }
             // 示例用户（密码为SHA-256加盐哈希，含平台管理员）
             try (var ps = conn.prepareStatement(
-                    "INSERT INTO users(account,password,nickname,school,phone,vip_level,vip_expire,role) VALUES(?,?,?,?,?,?,?,?)")) {
+                    "INSERT INTO users(account,password,nickname,school,phone,vip_level,vip_expire,role,user_type,teacher_no,college) VALUES(?,?,?,?,?,?,?,?,?,?,?)")) {
                 Object[][] users = {
-                    {"demo", SecurityUtil.hash("demo","12345678"), "演示用户", "北京大学", "13800138000", "premium", "2027-12-31", "user"},
-                    {"test", SecurityUtil.hash("test","12345678"), "测试同学", "清华大学", "13900139000", "campus", "2027-12-31", "user"},
-                    {"admin", SecurityUtil.hash("admin","admin123456"), "平台管理员", "花海平台", "", "free", null, "admin"}
+                    {"demo", SecurityUtil.hash("demo","12345678"), "演示老师", "苏州科技大学", "13800138000", "free", null, "user", "teacher", "T2019001", "电子与信息工程学院"},
+                    {"test", SecurityUtil.hash("test","12345678"), "测试同学", "苏州科技大学", "13900139000", "free", null, "user", "student", "", ""},
+                    {"admin", SecurityUtil.hash("admin","admin123456"), "平台管理员", "苏州科技大学", "", "free", null, "admin", "teacher", "ADMIN001", "信息化建设与管理中心"}
                 };
                 for (Object[] u : users) {
                     for (int i = 0; i < u.length; i++) ps.setObject(i+1, u[i]);
@@ -164,19 +280,8 @@ public final class DbSchema {
             }
             // 示例活动
             try (var ps = conn.prepareStatement(
-                    "INSERT INTO activities(name,category,description,date,time,location,school,max_people,fee,publisher,tags,promoted,promote_plan,promote_days) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
-                Object[][] acts = {
-                    {"AI时代的大学生职业规划论坛","lecture","随着AI技术的飞速发展，大学生的职业规划面临前所未有的机遇与挑战。本次论坛邀请到多位行业大咖、资深HR和成功校友，共同探讨AI时代下的职业发展路径。","2026-12-05","14:00","北京大学 百周年纪念讲堂","北京大学",300,29.9,"demo","AI,职业规划,论坛",1,"premium",7},
-                    {"全国大学生电竞联赛·春季赛","sports","全国高校电竞爱好者的巅峰对决！覆盖LOL、王者荣耀、CS2等热门项目，线上预选+线下决赛。","2026-12-12","10:00","浙江大学 紫金港体育馆","浙江大学",500,49.9,"demo","电竞,联赛,春季赛",1,"ultimate",7},
-                    {"黑客马拉松 48H 创新挑战赛","tech","48小时极限编程挑战！组队开发创新项目，争夺万元奖金。提供导师指导、技术支持和免费餐饮。","2026-12-20","09:00","清华大学 FIT楼","清华大学",200,19.9,"test","黑客马拉松,创新,编程",0,"",0},
-                    {"校园音乐节·冬日狂欢夜","art","多校联合音乐盛典！摇滚、民谣、电音多舞台同时开演，还有美食市集和创意工坊。","2027-01-05","18:00","武汉大学 梅操操场","武汉大学",1000,39.9,"demo","音乐节,演出,冬日",0,"",0},
-                    {"乡村支教志愿者招募计划","volunteer","寒假乡村支教项目，为偏远地区孩子带去知识与温暖。提供培训、交通补贴和志愿服务证书。","2027-01-10","09:00","复旦大学 邯郸校区","复旦大学",100,0,"test","支教,志愿,公益",0,"",0},
-                    {"跨校联谊·读书分享会","social","南京多校联合读书分享活动，以书会友，拓展人脉。每期精选主题，轻松社交。","2026-11-28","14:00","南京大学 仙林校区","南京大学",60,9.9,"test","读书,联谊,社交",0,"",0},
-                    {"创业大咖面对面·经验分享","lecture","邀请3位成功创业者分享从0到1的创业历程，涵盖融资、团队、产品等核心话题。","2026-12-08","15:00","上海交大 闵行校区","上海交大",200,15,"demo","创业,分享,经验",0,"",0},
-                    {"校园篮球3v3挑战赛","sports","热血篮球，3v3对抗！自由组队或单人报名，争夺校际冠军。提供专业裁判和奖品。","2026-12-15","09:00","中山大学 南校区体育馆","中山大学",128,20,"test","篮球,3v3,体育",0,"",0},
-                    {"【已结束】2025春季社团招新回顾展","social","往期活动回顾展示，用于演示过期活动不可报名的平台规则。","2025-06-01","09:00","北京大学 逸夫楼","北京大学",100,0,"demo","往期,回顾",0,"",0},
-                    {"【已满员】新生跨校线上见面会","social","新生线上破冰见面会，名额有限先到先得，用于演示人数上限的平台规则。","2026-11-20","19:00","线上 腾讯会议","花海平台",1,0,"demo","新生,见面会",0,"",0}
-                };
+                    "INSERT INTO activities(name,category,description,date,time,location,school,max_people,fee,publisher,tags,promoted,promote_plan,promote_days,credit_hours) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+                Object[][] acts = sampleActivities();
                 for (Object[] a : acts) {
                     for (int i = 0; i < a.length; i++) ps.setObject(i+1, a[i]);
                     ps.executeUpdate();

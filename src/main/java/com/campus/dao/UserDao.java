@@ -45,10 +45,11 @@ public final class UserDao {
         var conn = pool.borrow();
         try {
             try (var ps = conn.prepareStatement(
-                    "INSERT INTO users(account,password,nickname,school,phone) VALUES(?,?,?,?,?)")) {
+                    "INSERT INTO users(account,password,nickname,school,phone,user_type,teacher_no,college) VALUES(?,?,?,?,?,?,?,?)")) {
                 ps.setString(1, user.account); ps.setString(2, user.password);
                 ps.setString(3, user.nickname); ps.setString(4, user.school);
-                ps.setString(5, user.phone);
+                ps.setString(5, user.phone); ps.setString(6, user.userType);
+                ps.setString(7, user.teacherNo); ps.setString(8, user.college);
                 ps.executeUpdate();
             }
         } finally { pool.release(conn); }
@@ -153,6 +154,9 @@ public final class UserDao {
         u.vipLevel = rs.getString("vip_level");
         u.vipExpire = rs.getString("vip_expire");
         u.role = rs.getString("role");
+        u.userType = rs.getString("user_type");
+        u.teacherNo = rs.getString("teacher_no");
+        u.college = rs.getString("college");
         u.banned = rs.getInt("banned") == 1;
         return u;
     }

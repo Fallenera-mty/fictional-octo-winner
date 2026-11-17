@@ -126,6 +126,153 @@
     font-size: 14px;
 }
 
+/* 我的日历 */
+.cal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.cal-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cal-group-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-500);
+    padding-left: 2px;
+}
+
+.cal-group-head span {
+    font-weight: 400;
+    color: var(--gray-400);
+}
+
+.cal-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+}
+
+.cal-row:hover {
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.cal-row.expired {
+    border-left-color: var(--gray-300);
+    opacity: 0.6;
+}
+
+.cal-row .cal-date {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 92px;
+}
+
+.cal-row .cal-day {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.cal-row .cal-time {
+    font-size: 13px;
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.cal-row .cal-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.cal-row .cal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.cal-row .cal-title .cal-name {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.cal-row .cal-badge {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: var(--gray-500);
+}
+
+.cal-row .cal-badge.today {
+    background: var(--primary-bg);
+    color: var(--primary-dark);
+}
+
+.cal-row .cal-badge.soon {
+    background: #fff7e6;
+    color: #b45309;
+}
+
+.cal-row .cal-badge.ended {
+    background: #f1f5f9;
+    color: var(--gray-400);
+}
+
+.cal-row .cal-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cal-row .cal-meta {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cal-row .cal-remove {
+    flex-shrink: 0;
+    border: 1px solid var(--gray-200);
+    background: #fff;
+    color: var(--gray-500);
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cal-row .cal-remove:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
 /* 响应式：窄屏两列变一列 */
 @media (max-width: 768px) {
     .profile-grid {

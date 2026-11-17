@@ -14,6 +14,9 @@ public class UserDO {
     public String vipLevel;
     public String vipExpire;
     public String role;
+    public String userType;
+    public String teacherNo;
+    public String college;
     public boolean banned;
 
     public Map<String, Object> toMap() {
@@ -25,6 +28,9 @@ public class UserDO {
         m.put("vipLevel", vipLevel);
         m.put("vipExpire", vipExpire);
         m.put("role", role);
+        m.put("userType", userType);
+        m.put("teacherNo", teacherNo);
+        m.put("college", college);
         m.put("banned", banned);
         return m;
     }

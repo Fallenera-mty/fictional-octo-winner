@@ -9,6 +9,32 @@ const phoneErr = document.getElementById('phoneErr');
 const strengthBox = document.getElementById('pwdStrength');
 const strengthFill = document.getElementById('strengthFill');
 const strengthText = document.getElementById('strengthText');
+const userTypeSel = document.getElementById('userType');
+const nicknameInput = document.getElementById('nickname');
+const teacherNoInput = document.getElementById('teacherNo');
+const teacherNoErr = document.getElementById('teacherNoErr');
+const collegeInput = document.getElementById('college');
+const collegeErr = document.getElementById('collegeErr');
+
+// 老师身份才显示工号与学院；老师身份下隐藏昵称（后端自动用工号代填）
+function toggleTeacherFields() {
+    const isTeacher = userTypeSel.value === 'teacher';
+    document.getElementById('teacherNoGroup').style.display = isTeacher ? '' : 'none';
+    document.getElementById('collegeGroup').style.display = isTeacher ? '' : 'none';
+    document.getElementById('nicknameGroup').style.display = isTeacher ? 'none' : '';
+    // 老师身份隐藏昵称时，去掉 HTML required，避免浏览器拦截提交
+    nicknameInput.required = !isTeacher;
+    if (isTeacher) nicknameInput.value = '';
+}
+userTypeSel.addEventListener('change', toggleTeacherFields);
+toggleTeacherFields();
+
+teacherNoInput.addEventListener('input', () => {
+    teacherNoErr.hidden = teacherNoInput.value.trim().length > 0;
+});
+collegeInput.addEventListener('input', () => {
+    collegeErr.hidden = collegeInput.value.trim().length > 0;
+});
 
 // ==================== 实时校验 ====================
 
@@ -84,6 +110,16 @@ function validateAll() {
         phoneErr.hidden = false;
         ok = false;
     }
+    if (userTypeSel.value === 'teacher') {
+        if (!teacherNoInput.value.trim()) {
+            teacherNoErr.hidden = false;
+            ok = false;
+        }
+        if (!collegeInput.value.trim()) {
+            collegeErr.hidden = false;
+            ok = false;
+        }
+    }
     return ok;
 }
 
@@ -105,7 +141,10 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
                 password: pwd.value,
                 nickname: document.getElementById('nickname').value.trim(),
                 school: document.getElementById('school').value.trim(),
-                phone: phoneInput.value.trim()
+                phone: phoneInput.value.trim(),
+                userType: userTypeSel.value,
+                teacherNo: teacherNoInput.value.trim(),
+                college: collegeInput.value.trim()
             })
         });
 
